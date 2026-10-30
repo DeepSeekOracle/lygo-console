@@ -27,7 +27,7 @@ SEED_FILES = ("SOUL.md", "IDENTITY.md", "MEMORY.md", "MAP.md", "BRAIN.md", "LINK
 ADMIN_MARKERS = (
     "LYGO" + "_" + "SERVER" + "_" + "KEYS",
     "LYGO" + "_" + "BUILDER" + "_" + "KEY",
-    "10.0.0." + "209",
+    "<LAN_IP>." + "209",
     "gitea" + ".pass",
     "GamePC",
 )

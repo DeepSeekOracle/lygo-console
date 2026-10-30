@@ -30,8 +30,8 @@ class WebToolsTests(unittest.TestCase):
         self.assertEqual(_blocked("https://metadata.google.internal/computeMetadata/v1/"), "host")
         self.assertEqual(_blocked("https://anything.internal/"), "host")
         self.assertEqual(_blocked("https://anything.local/"), "host")
-        self.assertEqual(_blocked("https://10.9.9.9/"), "private")
-        self.assertEqual(_blocked("https://172.31.255.254/"), "private")
+        self.assertEqual(_blocked("https://<LAN_IP>/"), "private")
+        self.assertEqual(_blocked("https://<LAN_IP>/"), "private")
         self.assertIsNone(_blocked("https://172.32.0.1/"))
 
     def test_wikipedia(self):

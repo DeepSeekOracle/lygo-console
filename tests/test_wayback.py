@@ -99,7 +99,7 @@ class TargetRefusalTests(unittest.TestCase):
             ("", "no_url"),
             ("file:///c:/secrets.txt", "scheme_not_allowed"),
             ("http://127.0.0.1:9641/", "host_not_allowed"),
-            ("https://192.168.1.10/admin", "private_host"),
+            ("https://<LAN_IP>/admin", "private_host"),
             ("https://169.254.169.254/latest/meta-data/", "private_host"),
             ("https://printer.local/x", "host_not_allowed"),
             ("https://api.internal/v1", "host_not_allowed"),
