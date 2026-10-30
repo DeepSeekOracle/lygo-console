@@ -1,0 +1,42 @@
+LYGO LOCAL AGENT CONSOLE 1.3.1 - PC LOCAL, EVERYTHING INCLUDED
+================================================================
+
+WHAT JUST HAPPENED
+  The sealed 1.3.1 build AND every brain were laid down (default C:\LYGO\LLM_CONSOLE):
+    models\gemma4-12b.gguf             7.4 GB   text + images + audio
+    models\gemma4-12b-mmproj.gguf      175 MB   the vision projector ("without this file the console loses vision")
+    models\qwen2.5-coder-7b.gguf       4.7 GB   the code brain
+    models\nomic-embed-text-latest.gguf 274 MB  recall / embeddings
+  Nothing to download. The engine and its backends are in engine\.
+
+  This installer spans files: SETUP.EXE plus one or more .bin slices beside it. Windows cannot load
+  a single Setup.exe larger than ~4.2 GB. Keep SETUP.EXE and its .bin slices together in the same
+  folder when you copy this - the installer reads them itself.
+
+START IT
+  Desktop icon "LYGO Local Agent Console", or C:\LYGO\LLM_CONSOLE\LYGO_LLM_CONSOLE.bat
+  Console + portal: http://127.0.0.1:9641   Engine: 127.0.0.1:11441
+  First boot loads a brain into VRAM - give it 20-60 seconds. Stop with LYGO_LLM_CONSOLE_STOP.bat.
+
+WHICH BRAIN BOOTS
+  config\console.json ships prefer_ids coder-first (qwen2.5-coder:7b - the fastest boot and the
+  measured 47 tok/s on an 8 GB card). gemma4-12b is right beside it and one click away in the
+  console; it is the model that reads pictures and sound, and it is the one to switch to on a
+  machine with more VRAM or for image/audio work. Both are local - no internet, ever.
+
+PROVING IT
+  http://127.0.0.1:9641/api/health → "last_perf" shows the last turn: tokens generated, tokens
+  shown, the unattributed remainder, prefill new vs cached, cache hit %, wall time.
+  1.3.1 measured, same ask: 2.84 s / 106 generated / 6 shown / 94% unseen  →  1.03 s / 2 / 2 / 0%.
+  `LYGO_TURNPERF=0` restores the previous behaviour exactly, without editing code.
+
+ADDING MODELS LATER
+  models\fetch_models.py --profile <core|basic|full|coder|embed> --yes --dest <folder>
+  Our own vault only, pinned revision, sha256 verified:
+    https://huggingface.co/DeepSeekOracle/lygo-console-models
+    https://github.com/DeepSeekOracle/lygo-console-models        (mirror)
+
+LICENCE
+  LYGO Sovereign License v3.0: use it, run it, build on it. No resale, no rebranding, no modified
+  redistribution. Model weights: Apache-2.0 (Google DeepMind, Alibaba Qwen, Nomic AI) - licence
+  text ships in models\.

@@ -1,0 +1,34 @@
+LYGO LOCAL AGENT CONSOLE 1.3.1 - USB CLAW (the stick build)
+===========================================================
+
+WHAT JUST HAPPENED
+  The sealed 1.3.1 stick build was laid down. It is the SELF-CONTAINED copy:
+    python\    its own Python - the stick needs no Python installed on the host
+    engine\    its own llama.cpp engine and backends
+    portal\, src\, skills\, prompts\, workspace\   the console itself
+  It runs from wherever it lands, including the stick itself.
+
+START IT
+  Start Menu → "LYGO Agent Stick" (stick ports), or <install>\LYGO_AGENT_STICK.bat
+  Console + portal: http://127.0.0.1:9651   Engine: 127.0.0.1:11451
+  Stop with LYGO_AGENT_STICK_STOP.bat.
+
+THE BRAINS (not in this installer - a stick has no room for 7-12 GB of weights)
+  <install>\models\fetch_models.py --profile coder --yes --dest <install>\models
+  fetched from our own vault, pinned to one commit, sha256 verified, nothing else:
+    https://huggingface.co/DeepSeekOracle/lygo-console-models
+    https://github.com/DeepSeekOracle/lygo-console-models        (mirror)
+  Profiles: coder 4.7 GB · embed 274 MB · basic 7.3 GB · full 12.5 GB.
+  The console scans <install>\models ("scan_roots" in config\console.json). On the studio PC it
+  also finds the vault directly (<MODELS>), so nothing needs fetching there.
+  On a stick with ~3 GB free, --profile coder is the one that fits; a bigger stick takes basic/full.
+
+WHAT 1.3.1 CHANGES (measured on the studio PC, same ask)
+  A two-word ask generated 106 tokens to show 6 - 94% of the turn was text nobody saw. Now: 2 and 2.
+  Every turn records generated vs shown, why they differ, prefill new vs cached, cache hit %, limb
+  calls and wall time - /api/health "last_perf", the console log, and the portal. `LYGO_TURNPERF=0`
+  restores the previous behaviour exactly.
+
+LICENCE
+  LYGO Sovereign License v3.0: use it, run it, build on it. No resale, no rebranding, no modified
+  redistribution. Model weights keep their own licences (Apache-2.0) - see models\.

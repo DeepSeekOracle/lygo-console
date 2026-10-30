@@ -1,0 +1,98 @@
+LYGO CLAW™ · LYGO PC LOCAL CONSOLE™ · LYGO Protocol Stack — NOTICE
+Steward: Justin Helmer (Lightfather · Excavationpro · DeepSeekOracle)
+License: LYGO Sovereign License v3.0 (Δ9Φ963-LICENSE-v3.0) — see LICENSE in this directory.
+
+This product is NOT open source. It is source-available under a brand-protective license:
+you may use it and build on it; you may not sell, rebrand, modify-and-distribute, or strip
+attribution, seals or signatures.
+
+CANONICAL SOURCE
+  https://github.com/DeepSeekOracle/lygo-protocol-stack        (stack, console, docs)
+  https://github.com/DeepSeekOracle/lygo-claw                   (USB LYGO CLAW agent)
+  https://deepseekoracle.github.io/lygo-protocol-stack/LYGO_CLAW.html  (product page)
+Mirrors do not inherit authority: if a copy conflicts with the canonical source, the
+canonical source controls.
+
+ATTRIBUTION REQUIRED IN DERIVED WORK AND PUBLIC USE
+  "LYGO Protocol / LYGO CLAW / LYGO PC LOCAL CONSOLE © Justin Helmer
+   (Lightfather · Excavationpro · DeepSeekOracle). LYGO Sovereign License v3.0."
+
+INTEGRITY / CERTIFIED BUILDS
+  Branded builds ship a file manifest (BUILD_MANIFEST.json and per-component
+  *_MANIFEST.json) and a Resonance Signature (Δ9Φ963-…). A build whose hashes match the
+  published manifest is a Certified Build. If the files differ, or the signature has been
+  altered, the copy is UNCERTIFIED: do not resell it, do not present it as LYGO, and do not
+  keep the marks on it in any way that suggests Steward endorsement.
+
+THIRD-PARTY COMPONENTS (their licenses govern them; this license does not relicense them)
+  · OpenClaw — https://github.com/openclaw/openclaw — Copyright (c) Peter Steinberger and
+    contributors — MIT License. Vendored copies live under vendor/openclaw/ (produced by
+    scripts/vendor_openclaw.ps1) and remain subject to the upstream MIT license and
+    copyright notices. LYGO's license covers LYGO's own additions and integration only.
+  · llama.cpp / GGUF inference engine and DLLs — MIT License, © the llama.cpp authors.
+  · Photo to mesh — the running engine is TripoSR, MIT, © Stability AI and Tripo AI,
+    https://github.com/VAST-AI-Research/TripoSR (weights: stabilityai/TripoSR).
+    The panel is credited to Modly by Lightning Pixel. Modly is MIT, Copyright (c) 2026
+    Lightning Pixel, https://github.com/lightningpixel/modly. This kit does not copy or
+    vendor Modly's source. The credit their license asks a fork to keep is shown in the
+    Photo to mesh panel and here:
+      Based on Modly (https://github.com/lightningpixel/modly)
+      by Lightning Pixel (https://github.com/lightningpixel)
+  · Model weights (e.g. Qwen / qwen2.5-coder, embeddings) — governed by each model's own
+    license and terms, as published by its authors. Running a model does not transfer any
+    rights in it.
+  · Python and other runtime dependencies — as bundled by their authors.
+  Where this license and a third-party license conflict for a third-party component, the
+  third-party license controls for that component.
+  Registry note: some registries (for example ClawHub) require a listing to carry a
+  registry-wide license such as MIT-0. That is a contract about a listing, not a transfer of
+  the Steward's copyright, and it does not cover the code as distributed from the canonical
+  GitHub source.
+
+PROTECTED QUANTITIES
+  The file names, seals, glyphs, Resonance Signatures, manifests, kernel eggs' sealed form,
+  the CATALOG/index structure and the branding in the UI are part of the work. Do not
+  overwrite, forge, mislabel or strip them.
+
+WARRANTY
+  Provided AS IS, without warranty of any kind. Not legal, medical, financial or safety
+  advice. Use in light; harmful or deceptive use is outside the grant.
+
+Δ9Φ963 — use in light · build on the lattice · do not sell the seal.
+
+
+## Third-party components this build carries or points at — verified 2026-10-12
+
+Every licence below was asked of the component's own source (GitHub licence API) rather than copied
+from memory; the fetch scripts name the same licence where they pull the binary. Nothing copyleft is
+BUNDLED in this kit: GPL and AGPL components are separate programs the operator installs and this kit
+drives over HTTP, which is why the two lists are kept apart.
+
+### Carried in this tree (source or binary travels with the kit)
+
+| component | licence | where it sits | what this kit does with it |
+| --- | --- | --- | --- |
+| Google model-viewer | Apache-2.0 (repository LICENSE); the bundled file carries a BSD-3-Clause header, Copyright 2017 Google LLC | `portal/model-viewer.min.js` | 3D preview for the mesh tools. Vendored so it never loads from a CDN: the page's own `<script src>` values are all `/static/` |
+| three.js | MIT | inside the same bundle | model-viewer's renderer; its example URLs (cdn.jsdelivr.net, discourse.threejs.org) are documentation strings, not fetches |
+| fflate | MIT (101arrowz) | inside the same bundle | decompression; credited in the bundle's own banner |
+| stable-diffusion.cpp | MIT (leejet) | `tools/sd-cpu/` (21 files, incl. the 35 MB `stable-diffusion.dll`) | the console's own picture engine, launched as `sd-cli.exe` (`src/media_tools.py`) |
+| llama.cpp | MIT (ggml-org) | fetched into `engine/` (gitignored) by `scripts/fetch_engine.ps1` | the local brain |
+| TripoSR | MIT (VAST-AI-Research) | reached from a virtualenv at a config path | photo-to-mesh (`src/mesh_tools.py`) |
+| modly | NOASSERTION — the upstream repository declares no standard licence; this kit links to it and carries no code from it | — | referenced only |
+| FilmCraft | MIT OR Apache-2.0 | fetched payload (`utilities/filmcraft/`, gitignored) by `scripts/fetch_filmcraft.ps1` | the video editor the film cards drive |
+| Plexo | MIT (© Anmol Kapil) | fetched payload (`utilities/plexo/`, gitignored) by `scripts/fetch_plexo.ps1`, which also copies `LICENSE-plexo.txt` | the operator's download manager, for torrents; this kit's own engine does the HTTP work |
+| Colibri | Apache-2.0 (JustVugg) | fetched by `scripts/fetch_colibri.ps1` | an optional inference engine |
+
+### Pointed at, never bundled (the operator installs them; copyleft stays theirs)
+
+| component | licence | why it is not in this tree |
+| --- | --- | --- |
+| ComfyUI | GPL-3.0 (comfyanonymous) | `comfy` is a path in `config/local.json`. A GPL program cannot be combined into this kit's own licensed work; it is driven as a separate program over its HTTP API |
+| VoiceStudio | AGPL-3.0-only (debpalash) | the full reasoning is the legal preamble of `src/voice_harness.py`: this kit ships a POINTER and a bridge to a copy the operator installed as their own AGPL copy, reads only paths, and combines nothing |
+| YuE | Apache-2.0 | an external music engine at a config path; renders are its own |
+| ACE-Step | Apache-2.0 | an external music engine at a config path |
+| getplexo.app / GitHub Releases | — | the only doors a Plexo payload comes through, via the fetcher above |
+
+Rule for the next reader: a component is **carried** only if it is in the table above. If a new
+dependency arrives, ask its licence API first and add a row here in the same change — an uncredited
+component in the tree is the one thing this register exists to prevent.

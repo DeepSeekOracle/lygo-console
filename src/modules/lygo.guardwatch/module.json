@@ -1,0 +1,66 @@
+{
+  "id": "lygo.guardwatch",
+  "family": "watch",
+  "title": "Guard watch",
+  "summary": "A finder over the credential deny-list: every pointer resolves, none sits inside the kit or a limb-readable root, and no secret-shaped file has been written into the tree.",
+  "version": "1.0.0",
+  "introduced": "1.3.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-20: a browser tab has no local tree, no credential pointers and no roots to audit, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.3.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "admin_map",
+    "workspace_map",
+    "tools",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/guardwatch",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.guard",
+      "slot": "dock",
+      "title": "Guard watch",
+      "data": "GET /api/guardwatch",
+      "refresh_s": 30,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_guardwatch.py"
+  ],
+  "docs": "04_MODULES/lygo.guardwatch/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Finder (family 'watch') over the credential deny-list. THE HARD RULE: it never opens a credential file and never prints a secret - it stats, resolves and compares paths only, and where a git remote URL carries a token it reports that fact WITHOUT printing the URL, because the URL is the secret. Its direct consequence is stated in missing[] every time: a secret inside a file whose name looks ordinary is beyond this card, because finding it would mean reading it. IT ASKS, IT DOES NOT RE-DERIVE: the deny rule is tools._denied(resolved_path) - the kernel's own, which resolves a path to its real form first so a short name, junction or mapped letter cannot slip past it - and the pointers/roots/drives come from admin_map. Keeping a second copy of the deny list would be a module that duplicates kernel logic, which is already wrong. GREEN MEANS EVERY CHECK RAN AND FOUND NOTHING: a check that could not run is named in checks.unchecked and drags the card to amber, never green. A pointer that does not resolve on a drive that is not present is 'lives elsewhere' and NOT a fault (the stick does not carry the steward's I: ops keys); on a drive that IS present it is a finding. The wide scan is bounded to depth 3 inside a shared 4,000-entry budget and says so; the kit walk has no depth limit because the kit is small enough to walk whole. It owns no state, writes nothing, fixes nothing - its own test scans this file for write calls."
+}

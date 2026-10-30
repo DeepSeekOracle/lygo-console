@@ -1,0 +1,43 @@
+LYGO Local Agent Console - PC LOCAL - FULL build 1.5.3 (2026-09-25)
+
+WHAT YOU JUST INSTALLED
+  Everything, sealed: the console, the chat engine, the picture engine, the music systems,
+  and the weights themselves - gemma4-12b with its projector, the qwen2.5-coder, the
+  embedding model, and the SD 1.5 image checkpoint with its licence.
+  It installs to C:\LYGO\LLM_CONSOLE and it runs on its own - no cloud, no account, and
+  nothing to download before you can draw a picture or ask a question.
+
+WHAT 1.5.3 ADDS (the new systems)
+  * The lyric sheet speaks the engine's own language. The box opens with the exact template
+    YuE reads (one section per single-word [tag]); one press puts it back if you clear it.
+  * "Convert" rewrites your own lyric format into that one, and "Check" tells you what YuE
+    would actually sing - both answer without spending a render.
+  * The agent can write a whole song into the box: give it a brief, or let it pick from the
+    engine's own tag vocabulary.
+  * Render fixes: the last section of a song used to be dropped, [VERSE 1] used to fold into
+    [verse1] instead of [verse], and header lines could be sung instead of read. All three
+    are fixed and covered by tests.
+
+HOW TO RUN
+  PC  : C:\LYGO\LLM_CONSOLE\LYGO_LLM_CONSOLE.bat  (or the desktop shortcut)
+  USB : plug the stick in and run LYGO_MASTER_MANAGER.bat from the stick root.
+
+THE FILES BESIDE THIS EXE
+  This build is 17 GB, and Windows cannot load a Setup.exe bigger than ~4.2 GB, so the
+  installer is split: LYGO_LLM_CONSOLE_1.5.3_PC_SETUP_FULL.exe plus its .bin slices.
+  COPY THEM TOGETHER. If a slice is missing the install stops and says so - it never
+  half-installs.
+
+TWO THINGS THE BUILD DELIBERATELY DOES NOT CARRY
+  Keys   - config/api.json is never part of a build. Open the console, Settings, and paste
+           your own provider keys.
+  Voices - the operator's own sessions, memory, songs and pictures stay on the machine that
+           made them; they are excluded from the payload by construction.
+
+The brains here are Apache-2.0 (Google DeepMind Gemma 4 12B, Alibaba Qwen2.5-Coder, Nomic AI)
+and the image checkpoint is CreativeML Open RAIL-M - both licence texts are in models\.
+SDXL Turbo is NOT included (Stability's non-commercial research licence); the optional fetch
+in the Start menu downloads it from its author and shows you the licence first.
+
+If anything here surprises you, stop and read BUILD_NOTES.md in the install folder - every
+release, every defect, and every decision that shaped it is written down there.

@@ -1,0 +1,66 @@
+{
+  "id": "lygo.meminfo",
+  "family": "info",
+  "title": "What this console remembers",
+  "summary": "The pair to LLM data: the live journal, the vault of filed sessions, the sealed archive and the event journal - what it still has, and what was folded away.",
+  "version": "1.0.0",
+  "introduced": "1.3.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-20: the web portal does not need these modules - a browser tab has no journal, no vault and no record to report on, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.3.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "compaction",
+    "sessions",
+    "paths",
+    "receipts"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/meminfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.mem",
+      "slot": "dock",
+      "title": "What this console remembers",
+      "data": "GET /api/meminfo",
+      "refresh_s": 10,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_meminfo.py"
+  ],
+  "docs": "04_MODULES/lygo.meminfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-out (family 'info'), the pair to lygo.llminfo: llminfo reports what the brain is, this reports what the console still has and what was summarised away. Five stores, each asked of its OWNER and never re-derived: compaction.safe_status() for the live journal, the window and the sealed archive; sessions.safe_stats() for the vault; paths for the event journal's location; receipts for the rotation policy that bounds the append-only stores. It owns no state, writes nothing and gates nothing, and its test scans its own source for write calls. THE DIVISION OF FACTS: the live token budget and the model's context window belong to lygo.llminfo - this card prints a row NAMING that owner instead of a second copy of the number that could drift out of step. HONESTY: every number a store could not produce is a named gap in missing[] and drags the card off green; a store that really is empty is a true fact and stays green ('nothing sealed yet - a true fact on a fresh kit, not a gap'); the recall reach group prints the rule table it counted by (newest 8 archives, 700-char snippets, a query needs a word of 4+ letters) so 'nothing was lost' is a claim about a named search. A zip the index names but cannot find is amber with the reason: the index stores an absolute path, so a moved or copied tree can leave it pointing home."
+}

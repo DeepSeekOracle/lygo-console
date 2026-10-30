@@ -1,0 +1,77 @@
+{
+  "id": "lygo.plexoctl",
+  "title": "Download controls",
+  "summary": "The buttons: is Plexo answering, start it, stop only the one this console started, stop every download - plus the route and the records behind them.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(the button that starts Plexo refuses by name on a stick that carries no payload and names the fetcher; the engine buttons still work, because the engine is this kit's own code. Nothing is ever downloaded by a click)",
+    "web": "N/A(same steward decision as the other actuator cards: a browser tab cannot start a process or own a download on this machine)"
+  },
+  "requires": {
+    "console": ">=1.7.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "atomicio",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "plexo_tools"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/plexo",
+      "handler": "data",
+      "legacy": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/plexo",
+      "handler": "control",
+      "legacy": false
+    }
+  ],
+  "limbs": [
+    {
+      "name": "plexo",
+      "effect": "write"
+    }
+  ],
+  "panes": [
+    {
+      "id": "dock.plexoctl",
+      "slot": "dock",
+      "title": "Download controls",
+      "data": "GET /api/plexo",
+      "refresh_s": 15,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [
+      "save/plexo"
+    ],
+    "writes_via": "atomicio",
+    "gate": "p0"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_plexo.py",
+    "tests/test_limb_plexo.py"
+  ],
+  "docs": "04_MODULES/lygo.plexoctl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "The actuator half of the download pair: `lygo.plexoinfo` reads the facts and this module is where Plexo is started, checked and stopped and where running downloads are cancelled. It owns exactly one thing - save/plexo, this harness's own small state (which pid this console started, and when) - written through atomicio behind the p0 gate. It renders nothing itself: every call goes through the `plexo` limb's own harness, declared here as owned (the limb lives in limbs.py and is not re-registered, so no tool changes behaviour and none is listed twice). WHAT IT WILL NOT DO: it will not stop a Plexo it did not start (a window the operator opened belongs to the operator, and `stop` refuses that case BY NAME); it will not claim Plexo is up because a process was spawned (its bridge answering on 19288-19290 is the proof, and a first launch that has not answered yet says exactly that); it will not hand a link to Plexo without an explicit consent (that starts a download on someone's metered connection); it will not fetch the 246 MB installer - the button refuses and names scripts/fetch_plexo.ps1; and it will never claim a speed-up it did not measure."
+}

@@ -1,0 +1,69 @@
+{
+  "id": "lygo.llminfo",
+  "family": "info",
+  "title": "LLM data",
+  "summary": "One panel for whatever LLM is hooked up: model and file facts, the token budget from the record, the API rate window (peak / off-peak), and what the provider does not tell us.",
+  "version": "1.0.0",
+  "introduced": "1.2.0",
+  "lifecycle": "PARITY",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "FULL",
+    "web": "N/A(by steward decision 2026-09-20: the web portal does not need these modules - a browser tab has no local engine, no registry file, no receipts and no log files, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.2.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [
+      "lygo.world"
+    ],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "registry",
+    "compaction",
+    "cloud_api",
+    "world_clock",
+    "version"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/llminfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.llm",
+      "slot": "dock",
+      "title": "LLM data",
+      "data": "GET /api/llminfo",
+      "refresh_s": 5,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_llminfo.py"
+  ],
+  "docs": "04_MODULES/lygo.llminfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-only collector: it adds no state and writes nothing, so its gate is 'none'. It reports only facts another owner already holds - the selected model record (registry), the live window budget and the record counters (compaction.safe_status), the API switch and its last answer (cloud_api.public_status), the clock (world_clock.pulse) and the release (version) - and it names every fact it cannot get rather than filling the gap with a guess. The pane id is slot-prefixed ('dock.llm') because /api/modules publishes pane ids; the shell places a pane by its prefix - slot 'dock' is the console page's bottom strip, full length, one card per module, with the PAGE scrolling to it - so a pane reaches that strip without a shell edit, and no module can take room from the working area. inner_scroll is false on purpose: the page scrolls, not the pane. Rate windows are the PROVIDER's published policy, not our inference: only DeepSeek publishes one today (peak 01:00-04:00 and 06:00-10:00 UTC, Mon-Fri, off-peak is half the peak rate) and the source URL travels with the answer. Promoted to the USB LYGO CLAW in 1.2.0 (as-built Addendum A7): the module and the pane host travelled together, every file sha256-verified against the PC tree, and the stick re-ran the tests."
+}

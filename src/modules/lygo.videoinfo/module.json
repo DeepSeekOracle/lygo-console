@@ -1,0 +1,65 @@
+{
+  "id": "lygo.videoinfo",
+  "family": "info",
+  "title": "Video making",
+  "summary": "The fourth making card, beside Pictures, voice and song: which local video engine this machine reaches, whether the GGUF loader and the weight files are on disk, and the last clip it really wrote.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(a stick reaches no video engine until one travels with it, and the weights are ~18 GB - the card reports exactly that rather than reading empty)",
+    "web": "N/A(by the same steward decision as the other making cards: a browser tab has no local engine, no local weights and no output folder to report on, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.7.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "video_harness",
+    "hardware",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/videoinfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.video",
+      "slot": "dock",
+      "title": "Video making",
+      "data": "GET /api/videoinfo",
+      "refresh_s": 30,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_video.py"
+  ],
+  "docs": "04_MODULES/lygo.videoinfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-out (family 'info'), the fourth of the making cards. Every fact is asked of its OWNER - video_harness.app_state() for the engine install, adapter_state() for the GGUF loader, weights_state() for every declared weight file by name and size, models() for the recipes and their limits, and probe() for the live card - and none of it is re-derived here, so this card cannot drift out of step with the limb that renders. WHAT IT WILL NOT DO: it never claims a clip was made when none was. The last-clip row reports a file that is proven present and non-empty, or it says 'no clip rendered yet on this kit' - which is a TRUE fact on a fresh kit and stays green, exactly as an empty vault does on the memory card. The three ways a video engine can be unusable are kept SEPARATE and named separately - the app missing, the GGUF loader not registered, a weight file absent - because collapsing them is how a missing weight reads as a missing engine. A weight file that is declared and absent is reported as absent with its name, never folded into a percentage that reads as fine. It owns no state, writes nothing and gates nothing: its own test scans this source for write calls."
+}

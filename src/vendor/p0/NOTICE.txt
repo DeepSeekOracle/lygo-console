@@ -1,0 +1,8 @@
+Vendored copy of CANON:
+  lygo-protocol-stack/protocol0_byte_entropy_filter/src/python/byte_entropy_filter.py
+
+This copy exists so the stream runtime (U:\LYGO\projects\lygo-llm) can fail-closed
+on P0 physics without a protocol-stack checkout. If LYGO_STACK_ROOT is set and
+the CANON file imports, that overlay wins; on ImportError this vendor is used.
+
+Do not "improve" entropy math here — change CANON first, then recopy.

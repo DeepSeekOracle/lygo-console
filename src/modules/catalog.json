@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "signature": "Δ9Φ963-LYGO-MODULE-CATALOG-v1",
+  "notes": "The ordered list of modules this build ships. Order = the order they load and the order their panes appear. `enabled: false` disables a module without deleting it (the host reports it as DISABLED, which is a recorded decision, not a silent skip).",
+  "modules": [
+    {
+      "id": "lygo.health",
+      "order": 10,
+      "enabled": true
+    },
+    {
+      "id": "lygo.world",
+      "order": 20,
+      "enabled": true
+    },
+    {
+      "id": "lygo.llminfo",
+      "order": 30,
+      "enabled": true
+    },
+    {
+      "id": "lygo.envwatch",
+      "order": 40,
+      "enabled": true
+    },
+    {
+      "id": "lygo.meminfo",
+      "order": 50,
+      "enabled": true
+    },
+    {
+      "id": "lygo.guardwatch",
+      "order": 55,
+      "enabled": true
+    },
+    {
+      "id": "lygo.notepad",
+      "order": 60,
+      "enabled": true
+    },
+    {
+      "id": "lygo.musicinfo",
+      "order": 70,
+      "enabled": true
+    },
+    {
+      "id": "lygo.musicwatch",
+      "order": 75,
+      "enabled": true
+    },
+    {
+      "id": "lygo.musicctrl",
+      "order": 80,
+      "enabled": true
+    },
+    {
+      "id": "lygo.filminfo",
+      "order": 86,
+      "enabled": true
+    },
+    {
+      "id": "lygo.filmctrl",
+      "order": 88,
+      "enabled": true
+    },
+    {
+      "id": "lygo.videoinfo",
+      "order": 92,
+      "enabled": true
+    },
+    {
+      "id": "lygo.archiveinfo",
+      "order": 95,
+      "enabled": true
+    },
+    {
+      "id": "lygo.archivectrl",
+      "order": 100,
+      "enabled": true
+    },
+    {
+      "id": "lygo.voiceinfo",
+      "order": 110,
+      "enabled": true
+    },
+    {
+      "id": "lygo.voicectrl",
+      "order": 120,
+      "enabled": true
+    },
+    {
+      "id": "lygo.plexoinfo",
+      "order": 125,
+      "enabled": true
+    },
+    {
+      "id": "lygo.plexoctl",
+      "order": 126,
+      "enabled": true
+    },
+    {
+      "id": "lygo.delegatectrl",
+      "order": 130,
+      "enabled": true
+    },
+    {
+      "id": "lygo.rosterinfo",
+      "order": 135,
+      "enabled": true
+    },
+    {
+      "id": "lygo.swarmctrl",
+      "order": 140,
+      "enabled": true
+    },
+    {
+      "id": "lygo.dispatcherctrl",
+      "order": 145,
+      "enabled": true
+    }
+  ]
+}

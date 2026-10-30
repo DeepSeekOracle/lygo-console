@@ -1,0 +1,77 @@
+{
+  "id": "lygo.musicctrl",
+  "title": "Song studio",
+  "summary": "The engine room for songs: choose which declared engine renders, start a render, watch it, stop it - one at a time, and nothing claimed that was not written.",
+  "version": "1.0.0",
+  "introduced": "1.5.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-25 - web parity is decided in WO-0002)"
+  },
+  "requires": {
+    "console": ">=1.9.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "atomicio",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "music_tools",
+    "music_jobs"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/music",
+      "handler": "data",
+      "legacy": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/music",
+      "handler": "control",
+      "legacy": false
+    }
+  ],
+  "limbs": [
+    {
+      "name": "music_generate",
+      "effect": "write"
+    }
+  ],
+  "panes": [
+    {
+      "id": "dock.musicstudio",
+      "slot": "dock",
+      "title": "Song studio",
+      "data": "GET /api/music",
+      "refresh_s": 10,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [
+      "save/music"
+    ],
+    "writes_via": "atomicio",
+    "gate": "p0"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_music_studio.py"
+  ],
+  "docs": "04_MODULES/lygo.musicctrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "The actuator half of the song pair: `lygo.musicinfo` reads the facts, `lygo.musicwatch` finds the faults, and this module is where a song is actually started, watched and stopped from the console. It owns exactly one thing - `save/music`, the operator's engine choice and one record per render - written through atomicio behind the p0 gate. It renders nothing itself: every render goes through the `music_generate` limb, which is declared here as owned (the limb itself lives in limbs.py and is not re-registered, so no tool changes behaviour and none is listed twice). A job record says what really happened: the song path the limb wrote, or the limb's own named failure. The audio bytes are served by the kernel's media route (/api/media/audio/<name>), the same way chat pictures are, so the panel plays a song that is already on disk and a page reload can never start a render."
+}

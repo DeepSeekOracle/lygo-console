@@ -1,0 +1,45 @@
+{
+  "id": "lygo.dispatcherctrl",
+  "family": "ctrl",
+  "title": "Dispatcher",
+  "summary": "Worker registry, chat switcher, boot/restart, and LLM search on this PC and LAN.",
+  "version": "1.0.0",
+  "introduced": "1.9.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(LAN scan is PC-local)",
+    "web": "N/A(a browser tab cannot probe LAN engines)"
+  },
+  "requires": {
+    "console": ">=1.9.0",
+    "python": ["3.11", "3.13"],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": ["paths", "auth"],
+  "machinery": ["dispatcher", "swarm", "tasking"],
+  "routes": [
+    {"method": "GET", "path": "/api/dispatcher", "handler": "data", "legacy": false},
+    {"method": "POST", "path": "/api/dispatcher", "handler": "control", "legacy": false}
+  ],
+  "limbs": [
+    {"name": "dispatcher", "effect": "write"}
+  ],
+  "panes": [
+    {
+      "id": "dock.dispatcher",
+      "slot": "dock",
+      "title": "Dispatcher",
+      "data": "GET /api/dispatcher",
+      "refresh_s": 8,
+      "inner_scroll": false
+    }
+  ],
+  "state": {"owns": ["data/swarm"], "writes_via": "atomicio", "gate": "none"},
+  "health": "health",
+  "tests": ["tests/test_dispatcher.py"],
+  "docs": "04_MODULES/lygo.dispatcherctrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Hermes uses lygo_limb name dispatcher. Local helper only if 11441 is already listening."
+}

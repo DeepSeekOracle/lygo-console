@@ -1,0 +1,65 @@
+{
+  "id": "lygo.musicinfo",
+  "family": "info",
+  "title": "Song making",
+  "summary": "The pair to Pictures and voice: which music engine this machine reaches, whether its weights are on disk, which route a song would render on, and the last song it really wrote.",
+  "version": "1.0.0",
+  "introduced": "1.4.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-20: a browser tab has no local engine, no local weights and no output folder to report on, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.4.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "music_tools",
+    "hardware",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/musicinfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.music",
+      "slot": "dock",
+      "title": "Song making",
+      "data": "GET /api/musicinfo",
+      "refresh_s": 20,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_music.py"
+  ],
+  "docs": "04_MODULES/lygo.musicinfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-out (family 'info'), the third of the making cards beside the picture engine and the voice engine: what this machine can actually make a song WITH. Every fact is asked of its OWNER - music_tools.engine_state() for the install and the weights, music_tools.music_route() for which route is open, hardware for the live card reading, paths for where the songs go - and none of it is re-derived here, so this card cannot drift out of step with the limb that renders. WHAT IT WILL NOT DO: it never claims a song was made when none was. The last-song row reports a file that is proven present and non-empty, or it says 'no song rendered yet on this kit' - which is a TRUE fact on a fresh kit and stays green, exactly as an empty vault does on the memory card. A model that is declared but not downloaded is reported as wired-but-not-downloaded with the missing file names, never as absent and never as ready. A check that could not run is a named gap in missing[] and drags the card off green. It owns no state, writes nothing and gates nothing: its own test scans this source for write calls."
+}

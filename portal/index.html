@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LYGO Manager Agent Console</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230c0a08'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23e0b36a' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css?v=20261024-roster">
+<script>window.LYGO_TOKEN = /*LYGO_TOKEN*/;</script>
+<!-- Behaviour patch classes (status line, trace pane, error bubbles, empty state, brand stamp).
+     Same tokens as style.css; small enough to fold into style.css later. -->
+<style>
+  .brand-logo { border-radius: 10px; border: 1px solid rgba(224, 179, 106, 0.22); }
+  .build-stamp { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; }
+  .about { margin-top: 0.3rem; font-size: 0.78rem; color: var(--muted); }
+  .about > summary { cursor: pointer; color: var(--gold); font-size: 0.74rem; letter-spacing: 0.08em; }
+  .about p { margin: 0.35rem 0 0; max-width: 46rem; line-height: 1.45; }
+  .status-out { margin: 0.15rem 0 0.5rem; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  .status-out.warn { color: var(--bad); }
+  .hint.warn { color: var(--bad); }
+  .trace-pane { border: 1px solid var(--line); border-radius: 8px; padding: 0.35rem 0.5rem; margin-bottom: 0.4rem; background: rgba(0, 0, 0, 0.22); }
+  .trace-pane > summary { cursor: pointer; color: var(--gold); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .trace-list { list-style: none; margin: 0.35rem 0 0; padding: 0; max-height: 11rem; overflow: auto; font-size: 0.72rem; }
+  .trace-item { display: flex; gap: 0.35rem; align-items: baseline; padding: 0.14rem 0; color: #d7cbb8; border-bottom: 1px dashed rgba(224, 179, 106, 0.12); }
+  .trace-item b { color: var(--ink); font-weight: 600; }
+  .trace-badge { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid var(--line); border-radius: 999px; padding: 0 0.35rem; color: var(--ok); }
+  .trace-item.fail .trace-badge { color: var(--bad); }
+  .trace-args { color: var(--muted); word-break: break-all; }
+  .bubble.error, .bubble.failed { background: #241512; border-color: var(--bad); color: #f2dcd6; }
+  .bubble.stopped { border-color: var(--warn); }
+  .bubble.streaming::after { content: "▌"; color: var(--gold); }
+  .empty-state { color: var(--muted); font-size: 0.85rem; line-height: 1.5; border: 1px dashed var(--line); border-radius: 12px; padding: 0.9rem 1.05rem; max-width: 46rem; }
+  .empty-state h3 { font-family: Georgia, serif; color: var(--gold); margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .empty-state ol { margin: 0.2rem 0 0.55rem 1.1rem; padding: 0; }
+  .empty-state li { margin: 0.15rem 0; }
+  .empty-state b { color: var(--ink); }
+  .example-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .example-row button { font-size: 0.75rem; font-weight: 500; text-align: left; }
+  .ctx-note { font-size: 0.72rem; color: var(--muted); padding: 0.28rem 0.85rem 0; background: rgba(18, 14, 10, 0.9); }
+  .ctx-note.warn { color: var(--bad); }
+  .compact-bar { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; padding: 0.24rem 0.85rem 0.3rem; background: rgba(18, 14, 10, 0.9); }
+  .compact-bar button { font-size: 0.72rem; padding: 0.18rem 0.5rem; }
+  .compact-bar button.busy { opacity: 0.55; }
+  .compact-status { font-size: 0.7rem; color: var(--muted); }
+  .compact-status.ok { color: var(--good, #6f6); }
+  .compact-status.warn { color: var(--bad); }
+  .vault-transcript { max-height: 20rem; overflow: auto; white-space: pre-wrap; font-size: 0.74rem; line-height: 1.35; background: rgba(0, 0, 0, 0.25); padding: 0.5rem; border-radius: 6px; margin-top: 0.35rem; }
+  .vault-row { display: flex; gap: 0.35rem; align-items: baseline; justify-content: space-between; }
+  .vault-row small { color: var(--muted); font-size: 0.7rem; }
+  .vault-tag { font-size: 0.68rem; color: var(--muted); }
+  .vault-picks { display: flex; gap: 0.25rem; flex: none; }
+  .stop-btn:disabled, .send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .seg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #brain-api.needs-key { opacity: 0.6; }
+  .ws-mount.ws-error { display: block; color: var(--bad); }
+</style>
+</head>
+<body>
+<button id="lygo-manager-open" class="lygo-manager-launch" type="button">Δ9 MANAGER</button>
+<div class="app-shell">
+<header>
+  <div>
+    <div class="brand-lockup">
+      <img class="brand-logo" src="/static/logo.jpg" width="48" height="48" alt="">
+      <div class="brand">Δ9Φ963 · <span id="brand-name">LYGO Manager Agent Console</span> <span id="brand-build" class="build-stamp">build 1.9.0</span></div>
+    </div>
+    <div class="sub">Local console for this machine — chat with the on-board engine, run its limbs, keep SOUL / IDENTITY / MEMORY next to it.</div>
+    <details class="about">
+      <summary>About / Help</summary>
+      <p>Studio local console · Scan and Boot in the controls bar under the chat box · Wikipedia search · SOUL.md / IDENTITY.md / MEMORY.md · Justin Helmer / Lightfather</p>
+      <p>First run: press <b>Scan drives</b>, pick a model and press <b>Boot LLM</b> — the health box in that bar says <b>engine=ready</b> when the local brain can answer. Nothing here needs the internet unless you press the API brain or a web limb.</p>
+    </details>
+    <div class="syslabel" id="syslabel" title="One console, three systems: stand-alone USB agent (everything onboard the stick, plug and play, mobile) · admin console on a PC (the build that becomes the public version) · online API-only web portal (already built)">SYSTEM: /*LYGO_SYSTEM*/ — USB LOCAL (stick, stand-alone) · PC LOCAL (this PC, admin console) · WEB PORTAL (API ONLY, online — already built)</div>
+  </div>
+</header>
+<section id="controls-strip" class="controls-strip" aria-label="Console controls">
+  <div class="ctrl-bars">
+    <div class="modelbar">
+      <button type="button" id="scan">Scan drives</button>
+      <select id="models" title="Available GGUF models (own vault)"></select>
+      <button type="button" id="select">Boot LLM</button>
+      <label class="chk"><input type="checkbox" id="tools" checked> Agent limbs</label>
+    </div>
+    <div class="brainbar" id="brainbar">
+      <span class="brain-title">Brain</span>
+      <div class="seg" role="group" aria-label="Brain switch">
+        <button type="button" id="brain-local" class="seg-btn on" aria-pressed="true" title="Local GGUF engine on this PC — the default, always complete">LOCAL<i>default</i></button>
+        <button type="button" id="brain-api" class="seg-btn" aria-pressed="false" title="Add key first: paste your API key in the row below, press Save key, then press API.">API<i>cloud</i></button>
+      </div>
+      <span id="brain-status" class="brain-status" aria-live="polite">LOCAL · engine</span>
+      <button type="button" id="brain-boot" class="mini">Boot local</button>
+        <button type="button" id="brain-boot-api" class="mini" title="Save the chosen provider/model and run the brain on the API — the local engine stays booted as the safety net">Boot API</button>
+      <button type="button" id="server-boot" class="mini boot-server" title="Boot the console server itself — for when this page says health failed, or the window was closed. Runs LYGO_LLM_CONSOLE.bat through the doorbell.">Boot server</button>
+      <button type="button" id="brain-newchat" class="mini" title="Clear the conversation and keep the active brain">New chat</button>
+    </div>
+    <div class="modelbar apibar">
+      <span id="api-status" class="api-status" aria-live="polite">API: off (local default)</span>
+      <select id="api-provider" title="Cloud API (same full limbs as local)">
+        <option value="deepseek">DeepSeek API</option>
+        <option value="gemini">Gemini</option>
+        <option value="groq">Groq</option>
+        <option value="openai">OpenAI</option>
+        <option value="xai">xAI Grok</option>
+        <option value="openrouter">OpenRouter</option>
+        <option value="opencode" selected>OpenCode Free (Forge)</option>
+        <option value="forge-nvidia">NVIDIA Bridge (Forge 8082)</option>
+        <option value="nvidia">NVIDIA NIM (direct)</option>
+        <option value="ofm">Our Free Model (18900)</option>
+        <option value="custom">Custom URL</option>
+      </select>
+      <input id="api-key" type="password" placeholder="key saved on this PC — paste to replace" autocomplete="off">
+      <input id="api-model" type="text" placeholder="model id" list="api-models" value="opencode/deepseek-v4.1-flash-free" autocomplete="off">
+      <datalist id="api-models"></datalist>
+      <input id="api-url" type="text" placeholder="custom chat URL" hidden autocomplete="off">
+      <button type="button" id="api-connect">Save key</button>
+      <button type="button" id="api-boot" class="mini" title="Save this provider/model and run the brain on the API right now — the local engine stays booted as the safety net">Boot API</button>
+      <button type="button" id="api-off" class="mini" title="Back to the local engine">API off</button>
+<div id="keys-strip" class="keys-strip" aria-live="polite"><span class="keys-label">API KEYS</span><span class="keys-body">checking…</span></div>
+    </div>
+  </div>
+  <div id="health" class="health">probing…</div>
+</section>
+
+<section id="world" class="world" aria-label="World time and weather">
+  <div class="world-now">
+    <div id="world-local" class="world-local">local —</div>
+    <div id="world-utc" class="world-utc">UTC —</div>
+  </div>
+  <div id="world-cities" class="world-cities"></div>
+</section>
+<main>
+  <nav class="rail">
+    <h2>Continuity</h2>
+    <button type="button" id="new-session">New session</button>
+    <p id="session-status" class="hint" role="status" aria-live="polite">The chat you are in is filed to the vault before the window is wiped — nothing is thrown away.</p>
+    <h2>Session vault</h2>
+    <p class="hint" id="vault-status" aria-live="polite">every finished chat is filed, labelled and findable here</p>
+    <div class="np-bar">
+      <input id="vault-q" type="text" placeholder="search titles, tags and transcripts" maxlength="80" autocomplete="off">
+      <button type="button" id="vault-search">Find</button>
+    </div>
+    <div class="compact-bar" style="padding-left:0">
+      <button type="button" id="vault-file">File this chat</button>
+      <button type="button" id="vault-adopt">File old history</button>
+      <button type="button" id="vault-refresh">Refresh</button>
+    </div>
+    <ul id="vault-list" class="filelist"></ul>
+    <div id="vault-view" hidden>
+      <h3 id="vault-view-title">—</h3>
+      <p class="hint" id="vault-view-meta"></p>
+      <div class="np-bar">
+        <button type="button" id="vault-resume">Reopen in chat</button>
+        <button type="button" id="vault-label">Name / tag</button>
+        <button type="button" id="vault-close">Close</button>
+      </div>
+      <textarea id="vault-transcript" class="vault-transcript" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="cont-tabs" role="tablist" aria-label="Continuity documents">
+      <button type="button" role="tab" class="on" data-cont="soul" id="tab-soul" aria-selected="true" aria-controls="pane-soul" tabindex="0">Soul</button>
+      <button type="button" role="tab" data-cont="id" id="tab-id" aria-selected="false" aria-controls="pane-id" tabindex="-1">Identity</button>
+      <button type="button" role="tab" data-cont="mem" id="tab-mem" aria-selected="false" aria-controls="pane-mem" tabindex="-1">Memory</button>
+    </div>
+    <div id="pane-soul" class="cont-pane" role="tabpanel" aria-labelledby="tab-soul" tabindex="0">
+      <p class="hint">SOUL.md — light math + decision spine. Saved to workspace.</p>
+      <textarea id="soul-edit" spellcheck="false" aria-label="SOUL.md"></textarea>
+      <button type="button" id="soul-save">Save soul</button>
+    </div>
+    <div id="pane-id" class="cont-pane" role="tabpanel" aria-labelledby="tab-id" tabindex="0" hidden>
+      <p class="hint">IDENTITY.md — who is on this console. Not mashed into soul.</p>
+      <textarea id="id-edit" spellcheck="false" aria-label="IDENTITY.md"></textarea>
+      <button type="button" id="id-save">Save identity</button>
+    </div>
+    <div id="pane-mem" class="cont-pane" role="tabpanel" aria-labelledby="tab-mem" tabindex="0" hidden>
+      <p class="hint">MEMORY.md — handshake, tools, champions, recovery. Not mashed into identity.</p>
+      <textarea id="mem-edit" spellcheck="false" aria-label="MEMORY.md"></textarea>
+      <button type="button" id="mem-save">Save memory</button>
+    </div>
+    <p class="hint" id="cont-status" aria-live="polite">workspace/SOUL.md · IDENTITY.md · MEMORY.md</p>
+    <h2>Workspace</h2>
+    <p class="hint">Mapped folders the LLM may use as brain/stack. Add a drive or folder; Remove takes it away. Click a mapped folder to browse it here (it does not touch your draft).</p>
+    <div id="ws-mounts" class="ws-mounts"></div>
+    <div class="np-bar">
+      <input id="ws-path" type="text" placeholder="C:\  or  D:\chatagent  or any folder" autocomplete="off">
+    </div>
+    <div class="np-bar">
+      <label class="chk"><input type="checkbox" id="ws-read" checked> read</label>
+      <label class="chk"><input type="checkbox" id="ws-write"> write</label>
+      <label class="chk"><input type="checkbox" id="ws-search" checked> search</label>
+      <button type="button" id="ws-add">Add access</button>
+      <button type="button" id="ws-refresh">Files</button>
+    </div>
+    <p class="hint" id="ws-status" aria-live="polite">live map</p>
+    <ul id="ws" class="filelist"></ul>
+    <h2>Skills</h2>
+    <p class="hint">The roster Hermes reads: champions, Grok skills, and the Unity harness. A row marked unity is a Unity plugin skill. Browse <a href="https://chatagent.ca/lygoskillhub.html" target="_blank" rel="noopener">SkillHub</a> for public installs.</p>
+    <input id="skills-local" type="text" placeholder="Filter skills (unity, forge, champion)" maxlength="80" autocomplete="off">
+    <p class="hint" id="skills-count" aria-live="polite">skills</p>
+    <div id="skills-list" class="skills-list"></div>
+    <div class="np-bar" style="margin-top:0.35rem">
+      <input id="skills-q" type="text" placeholder="SkillHub / ClawHub search" maxlength="80" autocomplete="off">
+      <button type="button" id="skills-search">Search</button>
+    </div>
+    <div class="np-bar">
+      <button type="button" id="skills-hub-btn">SkillHub</button>
+      <button type="button" id="skills-full-btn">FULL vault</button>
+    </div>
+    <div id="skills-hub" class="skills-hub" aria-live="polite"></div>
+    <h2>Limbs</h2>
+    <div id="limbs" class="limbs"></div>
+    <p class="hint">Hermes calls one of these with lygo_limb. Unity commands stay in the unity-cli skill until you ask to run them. Shell stays in workspace. P0 blocks OS wipe.</p>
+  </nav>
+  <section class="chat-panel">
+    <div id="log" class="log" aria-live="polite" aria-label="Transcript">
+      <div id="empty-state" class="empty-state">
+        <h3>Start here</h3>
+        <ol>
+          <li><b>Scan drives</b> — press it in the controls bar under the chat box. It finds the GGUF models in this machine's vault and on any stick that is plugged in.</li>
+          <li><b>Boot LLM</b> — pick a model in the drop-down next to it, press <b>Boot LLM</b>, and wait for <b>engine=ready</b> in the health box. First load can take a minute.</li>
+        </ol>
+        <p>Then just ask. Two examples:</p>
+        <div class="example-row">
+          <button type="button" class="example-prompt" data-prompt="Scan my mapped drives and tell me which models are runnable right now.">Scan my mapped drives and tell me which models are runnable</button>
+          <button type="button" class="example-prompt" data-prompt="Read the first 40 lines of README.md in my workspace, then summarize it in five bullets.">Read README.md in my workspace and summarize it</button>
+        </div>
+      </div>
+    </div>
+    <div id="ctx-note" class="ctx-note" aria-live="polite">context: 0 messages · images kept 2 · max_tokens 768</div>
+    <div class="compact-bar" id="compact-bar">
+      <button type="button" id="compact-now" title="Save this conversation to the record now, stamped, and fold whatever left the engine window into the digest — the save button on a game, for a chat">Save &amp; compact</button>
+      <button type="button" id="archive-open" class="mini" title="Where the record lives and what is sealed in it">Archive</button>
+      <span id="compact-status" class="compact-status" aria-live="polite">record: —</span>
+    </div>
+    <div id="attach-strip" class="attach-strip" hidden aria-live="polite"></div>
+    <form id="form" class="composer">
+      <input id="msg" type="text" placeholder="Task the agent… paste an https:// URL to auto-read" autocomplete="off" autofocus>
+      <label class="attach" title="Attach a photo for the agent to look at">img<input id="img" type="file" accept="image/*" hidden></label>
+      <label class="attach" title="Attach a file: text is read into your message, anything else is saved where the agent can open it">file<input id="file" type="file" hidden></label>
+      <button type="submit" id="send" class="send-btn">Send</button>
+      <button type="button" id="stop" class="stop-btn" disabled title="Stop waiting on the engine (aborts this answer)">Stop</button>
+    </form>
+  </section>
+  <aside>
+    <h2>Trace</h2>
+    <p id="status-out" class="hint status-out" aria-live="polite">status: starting…</p>
+    <details id="trace-pane" class="trace-pane" open>
+      <summary>Tool trace · <span id="trace-count">0</span></summary>
+      <ul id="trace-list" class="trace-list" aria-live="polite"></ul>
+    </details>
+    <details id="raw-pane" class="trace-pane">
+      <summary>Raw output</summary>
+      <pre id="limb-out" class="limb-out">—</pre>
+    </details>
+    <section class="notepad" id="notepad" aria-label="Console notepad">
+      <h2>Notepad</h2>
+      <div class="np-bar">
+        <select id="np-list" title="Saved notes"></select>
+        <button type="button" id="np-new">New</button>
+        <button type="button" id="np-save">Save</button>
+        <button type="button" id="np-del">Delete</button>
+      </div>
+      <input id="np-title" type="text" placeholder="Note title" maxlength="120" autocomplete="off">
+      <textarea id="np-body" placeholder="Paste a reply, a URL, a draft… notes stay in this console (save/notepad)." spellcheck="true"></textarea>
+      <div class="np-foot">
+        <button type="button" id="np-capture">Capture selection</button>
+        <button type="button" id="np-ask">Ask agent</button>
+        <span id="np-status" class="hint" aria-live="polite">local · save/notepad</span>
+      </div>
+    </section>
+    <p class="hint">
+      Donate <a href="https://www.paypal.com/paypalme/ExcavationPro" target="_blank" rel="noopener">PayPal</a> ·
+      <a href="https://www.patreon.com/Excavationpro" target="_blank" rel="noopener">Patreon</a> ·
+      <a href="https://chatagent.ca/sources/" target="_blank" rel="noopener">LYGO TV</a> ·
+      <a href="https://asiancoastline.com/listen.html" target="_blank" rel="noopener">Listen</a>
+    </p>
+  </aside>
+</main>
+
+<section id="lygo-stream-agents" class="lygo-stream-agents" aria-label="Stream PC linked agents">
+  <div class="lygo-stream-head">
+    <div><strong>STREAM PC · LINKED AGENTS</strong><span id="lygo-stream-status">checking stream link…</span></div>
+    <a href="http://127.0.0.1:8790/#agents" target="_blank" rel="noopener">Agents dashboard ↗</a>
+  </div>
+  <div class="lygo-stream-grid">
+    <article class="lygo-stream-chat" data-persona="a9lyra">
+      <header><strong>A9LYRA</strong><span id="stream-a9-state">linked</span></header>
+      <div class="lygo-stream-log" id="stream-a9-log"><p class="lygo-stream-note">Direct stream-PC brain. Ask, plan, or hand it a task.</p></div>
+      <form data-stream-form="a9lyra"><textarea rows="2" placeholder="Talk to A9LYRA on the stream PC…" aria-label="Message A9LYRA"></textarea><button type="submit">Send</button></form>
+    </article>
+    <article class="lygo-stream-chat" data-persona="lightfather">
+      <header><strong>Lightfather</strong><span id="stream-lf-state">linked</span></header>
+      <div class="lygo-stream-log" id="stream-lf-log"><p class="lygo-stream-note">Direct stream-PC brain. Ask for ops, architecture, or a task.</p></div>
+      <form data-stream-form="lightfather"><textarea rows="2" placeholder="Talk to Lightfather on the stream PC…" aria-label="Message Lightfather"></textarea><button type="submit">Send</button></form>
+    </article>
+  </div>
+</section>
+
+<section id="lygo-dispatcher" class="lygo-dispatcher" aria-label="Dispatcher workers">
+  <div class="lygo-disp-head">
+    <div>
+      <strong>DISPATCHER · WORKER MANAGER</strong>
+      <span id="disp-status">probing workers…</span>
+    </div>
+    <div class="lygo-disp-actions">
+      <button type="button" id="disp-refresh">Refresh</button>
+      <button type="button" id="disp-scan">Search this PC</button>
+      <button type="button" id="disp-scan-net">Search LAN</button>
+    </div>
+  </div>
+  <div class="lygo-disp-grid">
+    <aside class="lygo-disp-feed" id="disp-feed" aria-label="Worker feeds"></aside>
+    <article class="lygo-disp-chat">
+      <header>
+        <label>Talk to
+          <select id="disp-worker" aria-label="Choose worker"></select>
+        </label>
+        <span id="disp-worker-state">—</span>
+      </header>
+      <div class="lygo-disp-log" id="disp-log"><p class="note">Pick a worker. Hermes is the main chat. Helpers only answer if they are already live.</p></div>
+      <form id="disp-form">
+        <textarea id="disp-input" rows="2" placeholder="Send a task or question to the selected worker…" aria-label="Dispatcher message"></textarea>
+        <button type="submit">Send</button>
+      </form>
+      <div class="lygo-disp-ctrl">
+        <button type="button" id="disp-forge-boot">Boot Forge</button>
+        <button type="button" id="disp-boot">Boot</button>
+        <button type="button" id="disp-restart">Restart</button>
+        <button type="button" id="disp-task">Queue task</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="lygo-engine-key" class="lygo-engine-key" aria-label="Engine API key">
+  <div class="lygo-key-head">
+    <div><strong>ENGINE API KEY</strong><span id="key-status">checking…</span></div>
+    <code>http://127.0.0.1:9641/v1</code>
+  </div>
+  <div class="lygo-key-body">
+    <p>One key for the engine while the console is up. Use it as <code>Authorization: Bearer &lt;key&gt;</code> or <code>X-API-Key</code> against <code>/v1/chat/completions</code> and <code>/v1/models</code>.</p>
+    <div class="lygo-key-line">
+      <code id="key-prefix">not created</code>
+      <button id="key-create" type="button">Create API key</button>
+      <button id="key-rotate" type="button" hidden>Rotate key</button>
+      <button id="key-revoke" type="button" hidden>Revoke</button>
+    </div>
+    <div id="key-reveal" class="lygo-key-reveal" hidden>
+      <input id="key-secret" type="text" readonly aria-label="New API key">
+      <button id="key-copy" type="button">Copy key</button>
+      <span>Shown once. Store it somewhere safe.</span>
+    </div>
+    <p id="key-note" class="lygo-key-note" role="status" aria-live="polite"></p>
+    <p class="lygo-key-meta">Hashed at rest · single active key · rotating invalidates the old key immediately</p>
+  </div>
+</section>
+
+<section id="lygo-manager-inline" class="lygo-manager-inline" aria-label="LYGO Agent Manager">
+  <div class="lygo-inline-head">
+    <div><strong>Δ9 · LYGO AGENT MANAGER</strong><span>Command · uploaders · Agents · Stream PC · Genesis HUD</span></div>
+    <a href="http://127.0.0.1:8790/#command" target="_blank" rel="noopener">Open standalone ↗</a>
+  </div>
+  <div class="lygo-manager-uploadbar">
+    <span class="lygo-up-label">NATIVE PUBLISH</span>
+    <button type="button" data-up="signal">Signal ZIP</button>
+    <button type="button" data-up="music">Music files</button>
+    <button type="button" data-up="photo">Photos</button>
+    <span id="lygo-up-status" class="lygo-up-status">ready</span>
+    <input id="lygo-up-signal-file" type="file" accept=".zip,application/zip" hidden>
+    <input id="lygo-up-music-file" type="file" accept=".mp3,.wav,.flac,.m4a,audio/*" multiple hidden>
+    <input id="lygo-up-photo-file" type="file" accept="image/*" multiple hidden>
+  </div>
+  <iframe id="lygo-manager-inline-frame" src="http://127.0.0.1:8790/?theme=console#command" title="LYGO Agent Manager dashboard"></iframe>
+</section>
+
+<!-- The Song studio is a BAND of its own, not a panel in the aside: under the chat box, above
+     the module strip, wide enough that the lyric sheet and the song list are both usable. -->
+<div id="lygo-datafold-bar" class="lygo-datafold-bar">
+  <div><strong>DATA MODULES</strong><span>Song Studio · Photo to Mesh · Internet Archive · Modules · VoiceStudio</span></div>
+  <button id="lygo-datafold-toggle" type="button">Fold data modules ↑</button>
+</div>
+
+<section class="songstudio" id="ms-studio" aria-label="Song studio">
+  <h2>Song studio</h2>
+  <div class="np-bar">
+    <select id="ms-engine" title="Render engine. An engine that is not installed on this machine is still listed, but greyed out, with the reason in its label."></select>
+    <button type="button" id="ms-refresh" title="Ask the server for the current job and the folder of finished songs">Refresh</button>
+  </div>
+  <input id="ms-style" type="text" list="ms-style-presets" placeholder="Style — genre, mood, instruments, vocal character (e.g. folk ballad, warm male vocal, acoustic guitar)" maxlength="400" autocomplete="off">
+  <datalist id="ms-style-presets">
+    <option value="folk ballad, warm male vocal, acoustic guitar, brushed drums, close mic"></option>
+    <option value="indie pop, bright female lead, jangly guitars, upbeat, radio mix"></option>
+    <option value="lo-fi hip hop, dusty drums, vinyl crackle, mellow, instrumental"></option>
+    <option value="dark synthwave, analog bass, gated reverb drums, nocturnal, cinematic"></option>
+    <option value="cinematic orchestral, strings and horns, epic slow build"></option>
+    <option value="country, slide guitar, honest male vocal, mid tempo, live band"></option>
+    <option value="gospel choir, hammond organ, uplifting, big room reverb"></option>
+    <option value="synth pop, female lead, 80s drum machine, chorused guitar"></option>
+    <option value="heavy metal, palm-muted riffs, double kick, shouted vocal"></option>
+    <option value="ambient, no drums, pads and piano, spacious, instrumental"></option>
+  </datalist>
+  <div class="ms-quick ms-sheetbar">
+    <span class="ms-quick-label">lyric sheet</span>
+    <button type="button" class="ms-mini" id="ms-template" title="Put the engine's own fill-in template back in the box. Lines starting with # are read by the console and never sung, so ARTIST / STYLE / BEAT notes can live in the same sheet as the words.">template</button>
+    <button type="button" class="ms-mini" id="ms-convert" title="Re-cut a sheet written in another shape: [VERSE 1] folds onto [verse] (the engine only ever sees a one-word tag, so a numbered verse would otherwise render as an unknown section), and ARTIST: / ALBUM: / BEAT: lines become comments the singer never sings. A STYLE: line is lifted into the style box for you.">make it singable</button>
+    <button type="button" class="ms-mini" id="ms-check" title="What is wrong with this sheet before a render is spent on it: no words, no sections, header lines that would be sung, more sections than the engine sings.">check</button>
+    <button type="button" class="ms-mini" id="ms-restore" title="Put back the sheet that was in the box before the last change — the template, a conversion or the agent's draft all replace it, so this is the way back">restore</button>
+    <button type="button" class="ms-mini" id="ms-clear" title="Empty the lyric box and start from nothing">clear</button>
+    <button type="button" class="ms-mini" id="ms-write" title="The agent writes the song into this box, in the exact shape the engine sings. Whatever you have typed in the composer is the brief; with an empty composer it invents one. The draft is checked before you see it.">agent writes it</button>
+    <button type="button" class="ms-mini" id="ms-surprise" title="Take a style at random from the engine's own tag vocabulary, then have the agent write the song for that style">surprise me</button>
+    <span id="ms-sheetmsg" class="hint ms-est" aria-live="polite"></span>
+  </div>
+
+  <textarea id="ms-lyrics" placeholder="Lyrics — the words to sing, one line each, with section tags on their own lines:&#10;[verse]&#10;a line of the song&#10;[chorus]&#10;the part that comes back&#10;The engine sings exactly what it is given, and it sings ONE SECTION AT A TIME — each [tag] section is a section of the song. Untagged, it groups your stanzas for you. Leave a blank line for an instrumental break." spellcheck="true"></textarea>
+  <div class="ms-nums">
+    <label title="Sections to sing — one per part of your words. Leave it EMPTY and the lyric sheet decides: every [tag] section (or every stanza, if you left them untagged) becomes one section of song. The engine's own limit is 10. On this machine a section costs minutes to hours, so a six-section song is a long job — that is what the second engine is for.">sections
+      <input id="ms-segments" type="number" min="0" max="10" step="1" value="" placeholder="from the words">
+    </label>
+    <label title="0 = let the engine pick a seed. Any other number reproduces the same take.">seed
+      <input id="ms-seed" type="number" min="0" step="1" value="0">
+    </label>
+    <label title="Token budget PER SECTION — the engine's own rate is 1000 tokens to about 10 s of audio, so its default of 3000 is about 30 s per section and the sections add up. MEASURED here: one 1500-token section took 3850 s (64 min) of compute at profile 3 on the 8 GB card.">max tokens
+      <input id="ms-tokens" type="number" min="1" step="1" value="3000">
+    </label>
+    <div class="ms-quick" id="ms-quick">
+      <span class="ms-quick-label">length</span>
+      <button type="button" class="ms-mini" data-ms-seg="1" data-ms-tok="3000" title="One section of about 30 s — the cheap way to hear whether the words sing before you commit the card to hours">~30 s</button>
+      <button type="button" class="ms-mini" data-ms-seg="2" data-ms-tok="3000" title="Two sections, about a minute">~60 s</button>
+      <button type="button" class="ms-mini" data-ms-seg="4" data-ms-tok="3000" title="Four sections, about two minutes">~2 min</button>
+      <button type="button" class="ms-mini" data-ms-seg="" data-ms-tok="3000" title="Clear the section count and let the lyric sheet decide: one section per [tag], or per stanza if you left them untagged">from the words</button>
+      <button type="button" class="ms-mini" id="ms-dice" title="Pick a random seed, so the next take is a different one">seed die</button>
+      <span id="ms-est" class="hint ms-est" aria-live="polite"></span>
+    </div>
+  </div>
+  <div class="np-foot">
+    <button type="button" id="ms-go">Generate</button>
+    <button type="button" id="ms-cancel" disabled title="Ask the engine to stop at its next checkpoint">Cancel</button>
+    <span id="ms-status" class="hint" aria-live="polite">studio · asking the server…</span>
+  </div>
+  <div id="ms-songs" class="ms-songs"></div>
+</section>
+<section class="meshstudio" id="mesh-studio" aria-label="Photo to mesh">
+  <h2>Photo to mesh</h2>
+  <p class="hint" id="mesh-hint">A photo on this PC becomes a GLB. The picture stays on this machine. Color is baked into a texture. The unseen back is a guess.</p>
+  <div class="mesh-bar">
+    <label class="attach">photo<input id="mesh-file" type="file" accept="image/png,image/jpeg,image/webp,image/bmp" hidden></label>
+    <label class="chk"><input type="checkbox" id="mesh-cut" checked> Cut the background</label>
+    <label>subject
+      <select id="mesh-fit" title="How much of the frame the cut-out subject fills. 0.85 is the setting the model was shown.">
+        <option value="0.70">smaller</option>
+        <option value="0.85" selected>fit</option>
+        <option value="0.95">larger</option>
+      </select>
+    </label>
+    <label>detail
+      <select id="mesh-res" title="Marching-cubes resolution. Higher is finer and uses more of the card. 256 is the model's own default.">
+        <option value="128">light</option>
+        <option value="192" selected>standard</option>
+        <option value="256">fine</option>
+      </select>
+    </label>
+    <button type="button" id="mesh-go">Build mesh</button>
+    <button type="button" id="mesh-lighter" disabled>Lighter copy</button>
+    <a id="mesh-download" hidden download>Download GLB</a>
+  </div>
+  <p class="hint" id="mesh-status" aria-live="polite">mesh · asking the desk…</p>
+  <p class="mesh-credit">Based on <a href="https://github.com/lightningpixel/modly" target="_blank" rel="noopener">Modly</a> by Lightning Pixel. Mesh engine: <a href="https://github.com/VAST-AI-Research/TripoSR" target="_blank" rel="noopener">TripoSR</a> (MIT). Modly's source is not in this kit.</p>
+  <model-viewer id="mesh-view" camera-controls auto-rotate shadow-intensity="0.6" exposure="1" alt="The mesh built from the photo"></model-viewer>
+</section>
+<script type="module" src="/static/model-viewer.min.js"></script>
+
+</div>
+<!-- The Archive band: the Wayback Machine, from the console. Under the chat box and above the
+     module strip, because a search is a thing the operator does WITH the chat, not a pane that
+     reports. Every element here is a no-op if the archive module is not loaded: the script asks the
+     server and says what it heard, so a refused module is a sentence, not a silent band. -->
+<section class="archive" id="wb-band" aria-label="Internet Archive search">
+  <h2>Internet Archive · Wayback Machine</h2>
+  <div class="wb-row">
+    <input id="wb-target" type="text" placeholder="a page or a site:  chatagent.ca  or  https://chatagent.ca/portal/" maxlength="400" autocomplete="off">
+    <input id="wb-word" type="text" placeholder="word in the site's URLs (optional)" maxlength="120" autocomplete="off">
+    <input id="wb-asof" type="text" placeholder="as of (digits: 20230501)" maxlength="14" autocomplete="off" inputmode="numeric">
+    <select id="wb-scope" title="how wide to ask">
+      <option value="page">this page</option>
+      <option value="site" selected>whole site</option>
+      <option value="prefix">a path tree</option>
+    </select>
+    <button type="button" id="wb-go">Search the archive</button>
+    <button type="button" id="wb-watch" class="mini" title="Keep this URL on the link-rot list">Watch</button>
+    <button type="button" id="wb-check" class="mini" title="Re-check every watched URL against the live web">Check list</button>
+    <button type="button" id="wb-forget" class="mini" title="Clear the search log (undoable)">Clear log</button>
+    <button type="button" id="wb-undo" class="mini" hidden>Undo clear</button>
+  </div>
+  <p class="hint" id="wb-status" aria-live="polite">the index is slow by nature — the answer says what it cost</p>
+  <div id="wb-answer" class="wb-answer" hidden>
+    <p class="hint wb-closest" id="wb-closest"></p>
+    <ul id="wb-results" class="wb-results"></ul>
+    <div class="wb-readwrap" id="wb-readwrap" hidden>
+      <div class="wb-readhead">
+        <span class="wb-readtitle" id="wb-readtitle">archived copy</span>
+        <button type="button" id="wb-readclose" class="mini">Close</button>
+      </div>
+      <pre class="wb-read" id="wb-read"></pre>
+    </div>
+    <ul id="wb-watched" class="wb-watched"></ul>
+  </div>
+</section>
+<section id="modules-dock" class="modules-dock" hidden aria-label="Modules">
+  <div class="modules-head">
+    <span class="modules-title">Modules</span>
+    <span id="modules-state" class="modules-state" hidden></span>
+    <span id="modules-note" class="modules-note">a module publishes a pane and the page stacks it here — the strip grows downward as modules are added</span>
+  </div>
+  <div id="module-panes" class="module-panes"></div>
+  <div id="voicestudio" class="vs-studio" aria-label="VoiceStudio">
+    <div class="modules-head">
+      <span class="modules-title">VoiceStudio</span>
+      <span id="vs-state" class="modules-state" hidden></span>
+    </div>
+    <p class="hint" id="vs-note">Local speech on this machine. VoiceStudio stays its own install. This console talks to it at 127.0.0.1:3900. Nothing is sent off the computer. If the chat model is using the graphics card, Start runs speech on the processor.</p>
+    <div class="vs-tools">
+      <button type="button" id="vs-start" class="mini">Start service</button>
+      <button type="button" id="vs-stop" class="mini">Stop service</button>
+      <a href="https://github.com/debpalash/VoiceStudio" target="_blank" rel="noopener">VoiceStudio repo</a>
+      <span id="vs-status" class="hint" aria-live="polite"></span>
+    </div>
+    <label class="vs-label">Text to speak
+      <textarea id="vs-text" rows="3" placeholder="Type what VoiceStudio should say"></textarea>
+    </label>
+    <div class="vs-tools">
+      <label>Engine <select id="vs-engine" aria-label="Voice engine"></select></label>
+      <label>Voice <select id="vs-voice" aria-label="Voice"></select></label>
+      <button type="button" id="vs-speak" class="mini">Speak</button>
+    </div>
+    <audio id="vs-audio" controls hidden></audio>
+    <p id="vs-clip" class="hint"></p>
+  </div>
+</section>
+<footer class="media-dock" aria-label="Radio and TV">
+  <audio id="radioEl" preload="auto"></audio>
+  <div id="radioDock" class="radio-inline">
+    <button type="button" id="radioPlay">Play</button>
+    <button type="button" id="radioNext">Next</button>
+    <button type="button" id="radioMute">Mute</button>
+    <label class="radio-vol" title="Radio volume">Vol
+      <input type="range" data-radio-vol min="0" max="100" value="45" aria-label="Radio volume">
+      <span id="radioVolPct">45%</span>
+    </label>
+    <span id="radioTitle" class="radio-title-inline">Radio</span>
+    <a id="radioListen" href="https://asiancoastline.com/listen.html" target="_blank" rel="noopener">Listen hub</a>
+    <a id="radioTv" href="https://chatagent.ca/sources/" target="_blank" rel="noopener">LYGO TV</a>
+    <span id="radioHint" class="hint" aria-live="polite"></span>
+  </div>
+</footer>
+  <p class="hint brand-legal">LYGO PC LOCAL CONSOLE™ · Δ9Φ963 · © 2024–2026 Justin Helmer (Lightfather · Excavationpro · DeepSeekOracle) ·
+  <strong>LYGO Sovereign License v3.0</strong> — use and build on it; <strong>no resale, rebranding, white-labelling or modified distribution</strong>.
+  Not open source. <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/lygo_llm_console/LICENSING.md" target="_blank" rel="noopener">What you may do</a> ·
+  <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/lygo_llm_console/LICENSE" target="_blank" rel="noopener">LICENSE</a> ·
+  <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/lygo_llm_console/TRADEMARKS.md" target="_blank" rel="noopener">Brand policy</a> ·
+  <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/lygo_llm_console/SUCCESSION.md" target="_blank" rel="noopener">Stewardship</a> ·
+  licence files also sit in this kit's folder.</p>
+<script src="/static/app.js?v=20261024-nocap"></script>
+<script src="/static/radio.js?v=20260916m"></script>
+<script src="/static/audio-coordinator.js"></script>
+<script src="/static/archive.js?v=20260927wayback2"></script>
+
+<script>
+(function(){
+  var b=document.getElementById('lygo-manager-open');
+  var m=document.getElementById('lygo-manager-inline');
+  if(b&&m) b.addEventListener('click',function(){m.scrollIntoView({behavior:'smooth',block:'start'});});
+})();
+</script>
+<script src="/static/stream-agent-chat.js?v=20261025-chat4"></script>
+<script src="/static/dispatcher.js?v=20261025-forge1"></script>
+<script src="/static/engine-key.js"></script>
+<script src="/static/manager-uploaders.js"></script>
+<script src="/static/module-fold.js"></script>
+</body>
+</html>
+

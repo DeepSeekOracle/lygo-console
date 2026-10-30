@@ -1,0 +1,141 @@
+{
+  "signature": "Δ9Φ963-LYGO-LLM-CONSOLE-v1",
+  "_notes": {
+    "kit": "Portable LYGO LLM Console config. Every path and every port in this kit is either relative to the kit folder or declared here - nothing is bound to a drive letter, so the whole folder can be copied to another drive and run beside the original.",
+    "how_it_is_read": "src/server.py + src/paths.py read the keys below. If config/local.json (gitignored, per machine) exists it is overlaid on top of this file, and an exported LYGO_*_PORT variable beats both. Relative paths are resolved inside the kit folder, %VARS% and ~ are expanded.",
+    "ports": {
+      "note": "The launchers (LYGO_LLM_CONSOLE.bat / LYGO_LLM_CONSOLE_STOP.bat / PUBLIC_GATEWAY.bat) read these and export LYGO_*_PORT, which is what src/paths.py actually uses. To run a second copy side by side, change port / llama_port / embed_port / colibri_port here (or in that copy's local.json, or in the environment).",
+      "port": "Console + agent portal HTTP port. Env override: LYGO_CONSOLE_PORT.",
+      "llama_port": "Chat engine (llama-server) port. Env override: LYGO_LLAMA_PORT.",
+      "embed_port": "Embedding engine port. Env override: LYGO_EMBED_PORT.",
+      "colibri_port": "Colibri / vision engine port. Env override: LYGO_COLIBRI_PORT."
+    },
+    "bind": "Console listen address. 127.0.0.1 = this PC only. Any other value is refused by src/server.py unless it is started with --lan --i-consent, so a public bind is never a silent side effect.",
+    "scan_roots": "Folders scanned for models. Relative entries resolve inside the kit folder ('./models' = <kit>/models), %USERPROFILE% and ~ are expanded, absolute paths are used as they are. The env var LYGO_MODELS declares this machine's model vault and is added at scan time (<MODELS> on the studio PC). Keep this list kit-relative so a copied kit finds its own models.",
+    "other_keys": {
+      "signature": "Kit signature string. Do not change - tests and the installer read it.",
+      "ctx_default": "Default context size (tokens) used for a model with no explicit value.",
+      "ctx_max": "Hard cap on context size; larger model settings are clamped to this. 32768 is the native window of the shipped 7B (qwen2.5-coder:7b) - the most the model can hold WITHOUT rope scaling, so no YaRN, no drift. With kv_type q8_0 that is 896 MiB of KV cache (448 MiB at 16384, measured 2026-09-18), which fits the 8 GB card beside the 4.36 GiB of weights. If a boot ever reports ram_refused, this is the number to lower.",
+      "ngl": "'auto' or an integer: GPU layers offloaded for llama-server.",
+      "threads": "'auto' or an integer: CPU threads for llama-server.",
+      "max_tokens": "Maximum reply tokens - how long one answer may run before the engine stops. This is the number the portal sends, the chat handler clamps to, and the window budget RESERVES room for; all three read this one key. Size it against generation speed: the shipped 7B runs ~10 tok/s on this PC, so 4096 is ~7 minutes of generation, which is why the engine is streamed token-by-token into the page rather than buffered. Lower it on a slower host, or to keep replies snappy.",
+      "prefer_by_ram": "true: pick a model that fits the machine's RAM when several match.",
+      "gpu": "'auto', or a backend name to force (e.g. cuda, vulkan, cpu).",
+      "flash_attn": "llama-server flash-attention setting: 'off', 'on' or 'auto'. Measured on THIS build (0.4.1-dev, build 10988) with -ngl 79 -t 6, -ctk/-ctv q8_0, same 680-token prompt: 'on' is FASTER on both halves - prompt eval 154.1 vs 141.7 t/s (+8.8%), generation 15.15 vs 13.00 t/s (+16.5%), and the model loads in 6.5s vs 10.2s. An earlier note here said 'on' was ~2% slower for prompt eval and shipped it off; that measurement does not hold on the current binary, and if a future engine ever rejects it the launch ladder already drops the tuned flags and retries.",
+      "kv_type": "KV cache type: absent means the engine's own f16, or q8_0 / q4_0. Quantised KV is how a small card gets a long context: q8_0 halves the cache for ~3% end to end.",
+      "batch": "llama-server -b (prompt batch). Absent or 'auto' means the engine default. Tried 4096 on 2026-10-27: the 12,599-token boot prime moved 3,373 -> 3,409 ms (no gain) and used ~600 MiB more VRAM (1,157 -> 546 MiB free), so it was reverted.",
+      "ubatch": "llama-server -ub (micro batch). Absent or 'auto' means the engine default. Reverted with batch on 2026-10-27.",
+      "media_root": "Where THIS machine keeps the media generators and their checkpoints - the picture engine (stable-diffusion.cpp) and the voice engine (piper). 1.3.2: this build CARRIES the CPU picture engine inside the package (tools/sd-cpu), so when the path below has no tools/ of its own the kit itself is used as the media root and a fresh all-in-one install draws a picture with no config at all. A machine that really has a media root of its own keeps it - the packaged engine is a fallback for machines that have nothing, never an override. Default: <MEDIA>.",
+      "sd_exe": "Full path to sd-cli.exe (stable-diffusion.cpp). Empty = <media_root>/tools/sd/sd-cli.exe, falling back to <media_root>/tools/sd-cpu/sd-cli.exe when only the CPU build is present - which is the case for the engine shipped inside this kit.",
+      "sd_model": "Full path to the image checkpoint (.safetensors/.gguf). Empty = the first *.safetensors under <media_root>/models/sd - for a packaged install that means <kit>/models/sd, filled once by tools/sd-cpu/get_model.ps1 (or FETCH_IMAGE_MODEL.bat). No checkpoint is redistributed with this build: SDXL Turbo is Stability's non-commercial research licence and SD 1.5 is CreativeML Open RAIL-M, so the fetcher pulls from the author's own repo and names the licence it is pulling.",
+      "piper_exe": "Full path to piper.exe. Empty = <media_root>/tools/piper/piper.exe.",
+      "piper_voice": "Full path to a piper voice (.onnx; its .onnx.json sits beside it). Empty = the first *.onnx under <media_root>/models/voices. espeak-ng-data must sit beside piper.exe - piper cannot phonemise without it.",
+      "image_timeout_s": "How long one picture may render before the limb gives up and names the timeout. Generous on purpose: a first run also loads a multi-gigabyte checkpoint. Lower it on a faster card, raise it on a slower one.",
+      "sound_timeout_s": "How long one spoken clip may take. A local voice renders faster than real time (measured 0.4 s for 3.1 s of speech), so this is a guard, not a budget.",
+      "music_engine": "Which declared music engine renders a song. 'yue' is the engine this build drives first (YuE / YuEGP: lyrics + style tags in, a sung stereo track out, on this machine). A declared engine that is NOT installed is never silently swapped in - the limb refuses by name and media_status names every engine this machine has.",
+      "music_root": "Where THIS machine keeps music engines and their weights. Empty = <media_root>/music. The resolution order is printed by music_tools (and by the Song making card) so 'no engine found' is a claim about a named search, not a feeling.",
+      "yue_root": "The YuE app folder - the one holding inference/gradio_server.py. Empty = <music_root>/tools/yue, then the standard installed app folder, then a bounded scan. Set this when the engine lives somewhere the console would not look on its own.",
+      "music_timeout_s": "How long one song may render before the limb gives up and names the timeout. Generous on purpose: the first run also loads a ~20 GB model, and a song is minutes of generation on an 8 GB card. Lower it on a bigger card.",
+      "music_profile": "0 = choose the engine profile from the live card reading (a free card gets the fast quantized profile, a card the chat model holds gets the offload profile). 1..5 force the engine's own profile numbers for a machine whose card this build cannot measure.",
+      "filmcraft_dir": "Where THIS machine keeps FilmCraft. Empty = <kit>/utilities/filmcraft, so a copied kit finds its own copy. The payload folders inside it are chosen by the host: win-x64, linux-x86_64, linux-aarch64, macos-universal (the editor and the CLI), and web (the same engine and UI compiled to WebAssembly). Set this when FilmCraft already lives somewhere else - an installed copy, another drive - and the console will use it rather than fetching its own.",
+      "filmcraft_app": "Full path to the FilmCraft desktop editor. Empty = <filmcraft_dir>/<platform>/filmcraft.exe (or filmcraft on macOS/Linux). The Boot button starts THIS file, with the control channel open.",
+      "filmcraft_cli": "Full path to filmcraft-cli. Empty = <filmcraft_dir>/<platform>/filmcraft-cli.exe. This is the headless engine: inspect, exec, run, export, render, commands, describe, and the MCP server. Everything the agent does in the background goes through it, and nothing is left listening afterwards.",
+      "filmcraft_control_port": "The port the desktop editor's own control channel listens on (loopback only, JSON lines, one request and one reply per line). It is opened when the console BOOTS the editor - it is never opened silently - and the editor prints it nowhere: the console remembers the port and pid it started, so a second copy of the console will not reuse it.",
+      "filmcraft_web_port": "The port tools/film_web.py serves the offline WebAssembly editor on (loopback only). The button opens this URL; stopping the button closes the port. A kit with no web payload says so rather than serving an empty page.",
+      "filmcraft_timeout_s": "How long one FilmCraft CLI call may take before the limb gives up and names the timeout. Generous on purpose: an export of a real sequence encodes every frame, which is minutes, not seconds - and the timeout is per call, so a two-minute cut is given a two-minute budget.",
+      "plexo_dir": "Where THIS machine keeps the Plexo app. Empty = <kit>/utilities/plexo, so a copied kit finds its own payload folder and never a drive letter from the machine it was built on. The payload folder inside it is chosen by the host (win-x64, macos-universal, linux-x86_64). Set this when Plexo already lives somewhere else - an installed copy, another drive - and the console will use it rather than its own. The console WIRES Plexo and does not modify it.",
+      "plexo_app": "Full path to the Plexo executable. Empty = <plexo_dir>/<platform>/plexo.exe (or plexo on macOS and Linux). The Start button launches THIS file, and the bridge hand-off needs the app running; a path here wins over the kit's own folder and the card says which one answered.",
+      "plexo_bridge_ports": "The loopback ports Plexo's own bridge is asked on, in order. Upstream listens on the first free one and its browser extension tries them all, so a port another app holds needs no setting. Change this only if something else on this machine has taken all three. LYGO's own engine needs none of them - it downloads through the standard library.",
+      "scan_roots": "Folders this build scans for weights. 1.3.1: './models' is carried so an INSTALLED copy finds the weights fetch_models.py places beside it (the installers put them in <install>/models); the vault path still wins on the studio PC."
+    }
+  },
+  "bind": "127.0.0.1",
+  "port": 9641,
+  "llama_port": 11441,
+  "embed_port": 11442,
+  "colibri_port": 11443,
+  "ctx_default": 65536,
+  "ctx_max": 65536,
+  "ngl": 1,
+  "threads": "auto",
+  "max_tokens": 4096,
+  "scan_roots": [
+    "<MODELS>",
+    "./models"
+  ],
+  "prefer_by_ram": false,
+  "gpu": "auto",
+  "kv_type": "q4_0",
+  "flash_attn": "on",
+  "media_root": "<MEDIA>",
+  "sd_exe": "",
+  "sd_model": "",
+  "image_models": [
+    {
+      "id": "qwen-image-2.1",
+      "diffusion_model": "models/qwen-image-2.1/qwen_image_2.1-Q4_K.gguf",
+      "vae": "models/qwen-image-2.1/qwen_image_2.1_vae_bf16.safetensors",
+      "llm": "models/qwen-image-2.1/Qwen3VL-8B-Instruct-Q4_K_M.gguf",
+      "steps": 28,
+      "cfg_scale": 2.5,
+      "size": 1024,
+      "align": 32,
+      "extra": [
+        "--offload-to-cpu",
+        "--vae-tiling"
+      ],
+      "license": "Qwen Research License - not open source and NOT redistributable. The kit ships the wiring only and never these weights: run them locally for testing and personal use, and point anyone else at the vendor URLs in `sources` so they fetch and run their own copy.",
+      "sources": {
+        "diffusion_model": {
+          "url": "https://huggingface.co/leejet/Qwen-Image-2.1-GGUF/resolve/main/qwen_image_2.1-Q4_K.gguf",
+          "page": "https://huggingface.co/leejet/Qwen-Image-2.1-GGUF",
+          "mib": 4003
+        },
+        "vae": {
+          "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/vae/qwen_image_2.1_vae_bf16.safetensors",
+          "page": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1",
+          "mib": 644,
+          "note": "2.1's OWN vae - the earlier Qwen-Image and Wan VAEs are not interchangeable"
+        },
+        "llm": {
+          "url": "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3VL-8B-Instruct-Q4_K_M.gguf",
+          "page": "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF",
+          "mib": 4794,
+          "note": "apache-2.0 - the only one of the three that is freely redistributable"
+        }
+      },
+      "_notes": "MAIN picture model when these three weights are on disk. SDXL-Turbo remains the fallback for a machine that does not have them, and for an explicit checkpoint or cpu=True. Qwen-Image-2.1: a 7B single-stream flow DiT, and it is NOT a single-checkpoint model. It takes three weight files passed separately - the diffusion model, its OWN VAE (the earlier Qwen-Image and Wan VAEs are not interchangeable), and a Qwen3-VL-8B text encoder. Paths here are relative to media_root. No separate engine is declared because none is needed: the shipped tools/sd build loads it, PROVEN by a real render rather than by inspecting the binary. Never judge engine support by grepping the exe for an architecture name - those strings are stored UTF-16 and a byte grep reports a false negative. --offload-to-cpu keeps all 8.9 GB of weights in RAM, because the card has 8 GB. MEASURED on this host: without that flag the engine places the DiT in VRAM (4003 MB) and then dies during weight preparation (qwen_image_2_1.transformer_blocks.2 failed) - so on this card the flag is required, not a tuning preference. LICENCE: the diffusion weights and VAE are Qwen Research License (not Apache-2.0); only the Qwen3-VL text encoder is apache-2.0. Check that before redistributing weights."
+    }
+  ],
+  "piper_exe": "",
+  "piper_voice": "",
+  "image_timeout_s": 900,
+  "sound_timeout_s": 180,
+  "music_engine": "yue",
+  "music_root": "",
+  "yue_root": "",
+  "music_timeout_s": 3600,
+  "music_profile": 0,
+  "filmcraft_dir": "",
+  "filmcraft_app": "",
+  "filmcraft_cli": "",
+  "filmcraft_control_port": 9642,
+  "filmcraft_web_port": 9643,
+  "filmcraft_timeout_s": 900,
+  "plexo_dir": "",
+  "plexo_app": "",
+  "plexo_bridge_ports": "19288,19289,19290",
+  "prefer_ids": [
+    "Qwen3-4B-Instruct-2507",
+    "qwen3-4b-instruct",
+    "qwen2.5-coder:7b",
+    "Huihui Gemma 4 12B It Qat Q4_0 Unquantized Abliterated",
+    "Mimo v2.6 9b Bf16",
+    "gemma-4-12B-it-qat-UD-Q4_K_XL",
+    "MiMo V2.6 Distill Qwen 9B",
+    "gemma4-12b",
+    "qwen2.5-coder:14b"
+  ],
+  "brain_note": "Qwen3-4B-Instruct-2507 on engine 11441 is the anchor: 64K ctx (meets HERMES_CONTEXT_FLOOR), q4_0 KV, ~65 tok/s. An API key takes priority when present. QwenPaw is retired. Heavy renders park this engine automatically (render_swap). See forge docs/MODELS.md.",
+  "tuning_note": "Tuned 2026-09-24: ctx 32768. Abliterated GGUFs installed for local image-gen testing (refusal direction projected out of language weights; mmproj unchanged). Huihui Gemma 4 QAT abliterated Q4_K 7.38 GB; MiMo Abliterated Q4_K_M 5.24 GiB. Host still draws on a picture ask. Child/CSAM subjects stay refused."
+}

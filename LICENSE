@@ -1,0 +1,361 @@
+LYGO SOVEREIGN LICENSE v3.0
+(Branded · Source-Available · No Derivative Distribution · No Resale · Attribution-Required)
+(LYGO CLAW™ USB agent · LYGO PC LOCAL CONSOLE™ · LYGO Protocol Stack)
+
+Copyright © 2024–2026 Justin Helmer (Lightfather · Excavationpro · DeepSeekOracle).
+All rights reserved except as expressly granted below.
+Moral rights of authorship are asserted and reserved.
+
+Resonance Signature: Δ9Φ963-LICENSE-v3.0
+Supersedes: LYGO Sovereign License v2.0 (Δ9Φ963-LICENSE-v2.0) — see §13 for the boundary.
+Canonical: https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/LICENSE
+Plain-English companion (not the license): LICENSING.md · Brand policy: TRADEMARKS.md
+
+IN SHORT (this paragraph is a summary only — §§1–14 control):
+You may RUN the branded builds on your own machines, read the source, use them for
+your own non-hostile work, and build your own new things on top of LYGO. You may NOT
+sell, resell, rent, white-label, rebrand, repackage, sublicense, or publicly distribute
+modified copies of the Software or the branded builds, and you may NOT remove the
+attribution, seals, signatures or notices. LYGO, LYGO CLAW, LYGO PC LOCAL CONSOLE and
+Δ9Φ963 stay the Steward's. Build on the idea freely; do not take the code, the seals, or
+the name.
+
+──────────────────────────────────────────────────────────────────────────────
+0. INTENT (NO-EVIL PREAMBLE)
+──────────────────────────────────────────────────────────────────────────────
+LYGO is built as a light-aligned, sovereign, anti-deception system ("no evil").
+This license grants limited rights so people may USE and BUILD UPON the work in good
+faith under LYGO protocol standards. It does NOT grant ownership. It does NOT grant a
+free pass to rebrand, resell, restripe attribution, ship corrupt forks that undermine
+the protocol's ethical gates, or present a private copy as the official build.
+
+The hardware and the branded software images (the LYGO CLAW USB agent and the LYGO PC
+LOCAL CONSOLE) are the Steward's products. Their identity, architecture and integrity
+are part of the work being protected — not decoration on top of it.
+
+"Good intention" is not a loophole. Harmful, deceptive or extractive use is out of
+scope of the grant. When in doubt: ask the Steward, do not assume.
+
+──────────────────────────────────────────────────────────────────────────────
+1. DEFINITIONS
+──────────────────────────────────────────────────────────────────────────────
+"Software" means the LYGO Protocol Stack, the LYGO CLAW agent, the LYGO PC LOCAL
+CONSOLE, LYGO skills, kernel eggs, prompts, portal, docs, scripts, images, seals,
+manifests and related materials distributed with this LICENSE.
+
+"You" means any person or legal entity exercising rights under this license.
+
+"Steward" means Justin Helmer (Lightfather · Excavationpro · DeepSeekOracle) and any
+successor the Steward designates in writing under §12.
+
+"Marks" means the names, logos, wordmarks, glyphs and signatures LYGO, LYGO CLAW, LYGO
+PC LOCAL CONSOLE, LYGO Δ9, Δ9Φ963, Lightfather, Excavationpro, DeepSeekOracle and the
+LYGO lattice/seal imagery, whether registered or not, together with confusingly similar
+variants.
+
+"Branded Build" means a copy of the Software delivered to You as a branded artifact:
+a LYGO CLAW USB image, a packaged LYGO PC LOCAL CONSOLE release, a signed installer,
+or a steward-published archive carrying the Marks or a Resonance Signature.
+
+"Certified Build" means a Branded Build whose files match the hashes published by the
+Steward (e.g. BUILD_MANIFEST.json / a *_MANIFEST.json in the distribution) and whose
+Resonance Signature is intact. Anything else is an UNCERTIFIED copy — see §4.
+
+"Protocol Standards" means the published LYGO ethical and operational rules, including
+without limitation: P0 / Guardian gates where applicable; no secrets in eggs or public
+artifacts; no automatic publish/push/social without explicit human consent for that
+action; truth-preserving provenance; and the prohibitions in §3(f).
+
+"Build Upon" means creating NEW works that call, wrap, integrate, depend on, or are
+inspired by the Software's ideas and architecture, without copying, replacing,
+rebranding or distributing the Software's code or core.
+
+"Modify" means changing the Software's source, configuration beyond ordinary
+user-settable settings, prompts, seals, eggs, manifests or docs, and then distributing,
+publishing, or offering those changes to others.
+
+"Resale" means selling, renting, leasing, licensing for a fee, SaaS- or
+managed-service-wrapping for a fee, bundling for value, or otherwise monetizing the
+Software, a Branded Build, or a rebranded/modified derivative of either.
+
+──────────────────────────────────────────────────────────────────────────────
+2. WHAT YOU MAY DO (GRANT)
+──────────────────────────────────────────────────────────────────────────────
+Subject to full compliance with this license and Protocol Standards, the Steward grants
+You a personal, worldwide, royalty-free, non-exclusive, non-transferable, revocable
+(only as provided in §9) license to:
+
+  (a) USE and RUN the Software and the Branded Builds on machines You own or control,
+      for personal, educational, research, ethical-defense and light-aligned agent
+      work — including internal use inside a business or organisation, provided the
+      Software itself is not thereby resold or offered as a service for a fee;
+
+  (b) STUDY and READ the source, and adapt settings that the Software itself exposes
+      to You (models, ports, workspace paths, prompts You are invited to edit,
+      your own skills and notes);
+
+  (c) BUILD UPON the Software — create compatible skills, agents, tools, integrations
+      and services that sit ON TOP of LYGO, provided they:
+        • keep clear attribution to the Steward and LYGO Δ9;
+        • do not claim to be the official LYGO stack, CLAW, or console;
+        • do not remove, hide or forge seals, signatures, hashes or provenance;
+        • adhere to Protocol Standards;
+
+  (d) SHARE UNMODIFIED copies of the Software, with this LICENSE, NOTICE,
+      TRADEMARKS.md and all attribution intact, by a non-commercial transfer that
+      does not exceed the cost of the media;
+
+  (e) CONTRIBUTE improvements to the Steward under this same license (patches offered
+      upstream; the Steward may accept or reject);
+
+  (f) SELL YOUR OWN WORK — your own skills, integrations, services, hardware and
+      content that Build Upon LYGO — provided your product is not the Software, does
+      not carry the Marks as its own identity, and does not include the Software's
+      code or a modified copy of it as the product.
+
+No trademark license is granted except as needed for truthful attribution (§6) and as
+set out in TRADEMARKS.md.
+
+──────────────────────────────────────────────────────────────────────────────
+3. WHAT YOU MAY NOT DO (HARD PROHIBITIONS)
+──────────────────────────────────────────────────────────────────────────────
+You may NOT, without prior written permission from the Steward:
+
+  (a) SELL, rent, license for a fee, or commercially resell the Software, a Branded
+      Build, or any rebranded / white-labeled derivative of either;
+
+  (b) OFFER the Software or a modified copy of it as a paid or free product, hosted
+      service, marketplace listing, "enterprise edition", or download that replaces,
+      impersonates or substitutes for an official LYGO release;
+
+  (c) DISTRIBUTE MODIFIED versions of the Software's core (source, skills, kernel
+      seeder, eggs, anchors, portal, prompts or protocol docs) publicly or to third
+      parties, except:
+        • private local changes that never leave Your control, OR
+        • contributions submitted back to the Steward under this license, OR
+        • written permission from the Steward;
+
+  (d) STRIP, HIDE, ALTER or FORGE copyright notices, this LICENSE, the NOTICE,
+      TRADEMARKS.md, Resonance Signatures, seals, hashes, manifests, Merkle roots, or
+      attribution of authorship;
+
+  (e) REBRAND: rename, re-logo, re-theme, re-sign, or otherwise re-identify the
+      Software or a Branded Build so that it appears to be Your product, a different
+      product, an unaffiliated product, or an official LYGO release when it is not;
+
+  (f) USE the Software for mass suppression, non-consensual behaviour manipulation at
+      scale, surveillance-state tooling, social-credit style control, weapons, or
+      other prohibited uses listed in Protocol Standards;
+
+  (g) FORK into a hostile or corrupt variant intended to defeat P0 / Guardian gates,
+      inject deception, or launder the Marks onto a modified build;
+
+  (h) CLAIM ownership of the Software, claim to be the Steward, the LYGO protocol, or
+      the official brand, or register a domain/handle/mark that impersonates them;
+
+  (i) SUBLICENSE the Software under MIT, MIT-0, Apache, BSD, GPL or any terms more
+      permissive than this license in a way that extinguishes these limits, or
+      relicense it for others;
+
+  (j) REMOVE, bypass or disable the integrity and identity checks described in §4.
+
+──────────────────────────────────────────────────────────────────────────────
+4. BRANDED BUILDS: IDENTITY AND INTEGRITY
+──────────────────────────────────────────────────────────────────────────────
+  (a) A Branded Build is delivered as-is. You may configure it through the settings it
+      exposes and You may add Your own data, skills and notes, but You may not
+      redistribute a modified Branded Build, nor publish a "fixed", "unlocked",
+      "debloated", "relicensed", "generic" or otherwise altered version of it.
+
+  (b) If You modify a Branded Build, it stops being a LYGO Certified Build. You must
+      not continue to present it as LYGO, LYGO CLAW, LYGO PC LOCAL CONSOLE, "official",
+      "certified", or "unmodified", and You must not keep the Marks on it in any way
+      that suggests the Steward produced or endorses that copy.
+
+  (c) You may verify the copy You hold and must not obstruct others from doing so:
+      every Branded Build ships a machine-readable manifest of its files and a
+      Resonance Signature. A copy whose hashes do not match, or whose signature has
+      been altered, is UNCERTIFIED and must not be redistributed or sold.
+
+  (d) Copies made for archival, backup, forensic or security-research purposes are
+      permitted, provided they are not published, sold or offered as above, and
+      provided findings are reported to the Steward rather than exploited.
+
+  (e) Hardware: the LYGO CLAW USB device, its labels, enclosure, serial identity and
+      pre-loaded image are part of the Branded Build. Reselling, reflashing for sale,
+      or relabeling hardware as Your own product requires written permission.
+
+──────────────────────────────────────────────────────────────────────────────
+5. BUILDING ON LYGO (ENCOURAGED PATH)
+──────────────────────────────────────────────────────────────────────────────
+You ARE encouraged to:
+
+  • Write new skills, agents and integrations that call LYGO tools while keeping this
+    LICENSE on LYGO code;
+  • Implement your own independent systems from the LYGO ARCHITECTURE and the IDEAS
+    (small live window + complete record, gates, sovereignty, lattice continuity) —
+    ideas and architecture are not monopolised by this license; the CODE and the
+    BRAND are;
+  • Plant your own eggs via the seeder while keeping sovereign seals honest;
+  • Document integration with eternalhaven / lattice anchors truthfully;
+  • Attribute: "Built on LYGO Δ9 Protocol — steward: Justin Helmer / Lightfather".
+
+Building ON TOP ≠ taking the core, renaming it, and selling it.
+An independent reimplementation that copies no LYGO code and carries none of the Marks
+is outside this license — and is welcome, with attribution of the inspiration.
+
+──────────────────────────────────────────────────────────────────────────────
+6. ATTRIBUTION (ALWAYS REQUIRED)
+──────────────────────────────────────────────────────────────────────────────
+Any public use, demo, paper, product that Builds Upon, or unmodified redistribution
+must include visible attribution substantially as:
+
+  "LYGO Protocol / LYGO CLAW / LYGO PC LOCAL CONSOLE © Justin Helmer
+   (Lightfather · Excavationpro · DeepSeekOracle).
+   Licensed under the LYGO Sovereign License v3.0 — not MIT, not open source."
+
+Display of "Powered by LYGO Δ9 Protocol" is required for public-facing systems that
+integrate the Software as a core dependency. A build badge or seal may be required for
+distributed copies; where the Steward publishes such a badge, removing it is a breach.
+
+──────────────────────────────────────────────────────────────────────────────
+7. THIRD-PARTY COMPONENTS
+──────────────────────────────────────────────────────────────────────────────
+This license covers the Steward's works only. Components that came from elsewhere keep
+their own licenses, and this license does not relicense them: for example llama.cpp /
+the engine and its DLLs, model weights (their own model licenses), and vendored
+OpenClaw code under the MIT License (see NOTICE). Where this license and a third-party
+license conflict for a third-party component, the third-party license controls for that
+component. Third-party registries (e.g. ClawHub) may require a registry-wide license
+(such as MIT-0) to host a LISTING — that registry contract does not transfer ownership
+of the Steward's copyright, does not cover the code as distributed from GitHub, and
+does not authorize ignoring this LICENSE when obtaining the Software from the
+canonical source.
+
+Canonical license for the LYGO Protocol Stack, LYGO CLAW and LYGO PC LOCAL CONSOLE:
+THIS FILE. If a mirror conflicts, this file controls.
+
+──────────────────────────────────────────────────────────────────────────────
+8. NO WARRANTY / LIMITATION OF LIABILITY
+──────────────────────────────────────────────────────────────────────────────
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+NON-INFRINGEMENT. IN NO EVENT SHALL THE STEWARD BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY ARISING FROM USE OR MISUSE OF THE SOFTWARE. THE SOFTWARE IS NOT LEGAL,
+MEDICAL, FINANCIAL OR SAFETY ADVICE AND MUST NOT BE RELIED ON AS SUCH.
+
+──────────────────────────────────────────────────────────────────────────────
+9. TERMINATION AND ENFORCEMENT
+──────────────────────────────────────────────────────────────────────────────
+  (a) Breach of this license terminates Your rights automatically and immediately.
+      Continued use after breach is unauthorized use of copyrighted material.
+
+  (b) The Steward may revoke the grant for documented hostile, deceptive or corrupt
+      forks, for impersonation, or for any attempt to strip provenance.
+
+  (c) On termination You must stop using and distributing the Software, delete copies
+      under Your control (backups made for archival/forensic purposes excepted), and
+      stop presenting any Marks.
+
+  (d) The Steward reserves all enforcement remedies: takedown requests (DMCA and
+      equivalent), platform complaints, registrar/host complaints, marketplace
+      removal, and civil claims for copyright and trademark infringement, passing off,
+      unfair competition and breach of license.
+
+  (e) Selling or distributing an infringing copy of the Software, a Branded Build, or
+      a rebranded derivative is an act of infringement, not a licence dispute.
+
+──────────────────────────────────────────────────────────────────────────────
+10. PRIOR VERSIONS AND THE LICENSE BOUNDARY
+──────────────────────────────────────────────────────────────────────────────
+  (a) This license applies to the Software as released FROM THE DATE IT IS PUBLISHED
+      with this file, and to all later releases unless a release states otherwise.
+
+  (b) Copies obtained under an earlier license remain governed by the terms under which
+      they were obtained — including earlier LYGO Sovereign License versions and,
+      where a component was published under the MIT License (for example earlier
+      lygo-claw releases), the MIT License for those specific copies. NO LICENSE IS
+      RETROACTIVE.
+
+  (c) The Steward may publish a written notice stating which releases fall under which
+      version; such a notice is authoritative for those releases.
+
+  (d) If You received a copy under a more permissive license, nothing here takes that
+      copy away — but nothing here grants You the marks, the newer builds, or
+      permission to present an old copy as the current official build.
+
+──────────────────────────────────────────────────────────────────────────────
+11. STEWARDSHIP OF THE NAME
+──────────────────────────────────────────────────────────────────────────────
+Only the Steward may call a build official, canon, certified, or a LYGO-branded
+release. No one else may: declare a fork the "real" LYGO; issue licences for the
+Software; sell certification; or claim succession without a written designation made
+under §12.
+
+──────────────────────────────────────────────────────────────────────────────
+12. SUCCESSION, SOVEREIGNTY LOCK, AND POSTHUMOUS PROTECTION
+──────────────────────────────────────────────────────────────────────────────
+  (a) GRANT IS IRREVOCABLE FOR THE COPYRIGHT TERM. The licence granted in §2 is
+      irrevocable by any third party and may not be modified, narrowed or replaced by
+      anyone other than the Steward acting in writing. It remains in force for the full
+      duration of copyright (in the United States, the life of the author plus seventy
+      years; elsewhere, the applicable term) and does not lapse on the Steward's death,
+      incapacity, or withdrawal from public activity.
+
+  (b) SUCCESSION. The Steward designates one or more Successor Stewards (a trusted
+      natural person, a foundation, a trust, or an entity created for this purpose),
+      named in a written instrument and/or in a SUCCESSION file in this repository and
+      in the Steward's estate documents. On the Steward's death or incapacity, all
+      stewardship rights, enforcement rights and marks pass to the Successor Steward,
+      who holds them in trust for the same purpose: to keep the original architecture
+      pure, the provenance truthful, and the name hers.
+
+  (c) NO ESTATE-BY-DEFAULT. Absent different written instructions, the Successor
+      Steward may not relicense the Software under permissive or open-source terms, may
+      not sell the Marks or the copyright out of the trust, and may not waive §2–§7.
+      Any attempt by an estate, heir, receiver, creditor or acquirer to relicense the
+      Software in a way more permissive than this license is void under this license's
+      terms and will be contested.
+
+  (d) CANONICAL SOURCE. The Steward (and thereafter the Successor Steward) maintains
+      the canonical repository and the canonical signatures. Mirrors must always point
+      to it. If the canonical source is lost, no fork inherits legality from
+      convenience — provenance is what makes a build LYGO.
+
+  (e) MORAL RIGHTS. The Steward's rights of attribution and of integrity of the work
+      are asserted and, so far as the law allows, are perpetual and not waivable. Every
+      copy, in every form, must keep the authorship attribution of §6 and must not be
+      distorted, mutilated or presented in a way that is prejudicial to the author's
+      honour or reputation.
+
+  (f) IF NO SUCCESSOR CAN ACT. Then this license continues unchanged: the grant of §2
+      and the prohibitions of §3–§4 remain in force, the Marks remain the property of
+      the Steward's estate/trust, and no party may claim stewardship, relicence, or
+      certify LYGO builds. The lock is that the terms outlive the author.
+
+  (g) Nothing in this section is intended to violate the law of any jurisdiction;
+      where a provision cannot be enforced, it is to be enforced to the maximum extent
+      permitted, and the rest of this license stands.
+
+──────────────────────────────────────────────────────────────────────────────
+13. GOVERNING NOTE AND PERMISSIONS
+──────────────────────────────────────────────────────────────────────────────
+This is a source-available, ethics-bound, brand-protective license — not a
+public-domain dedication, not OSI "open source", and not a permissive license. If You
+need rights beyond the grant (commercial distribution, a fork you wish to publish, an
+integration you want certified, a hardware partnership), ASK IN WRITING:
+steward channels via Excavationpro / DeepSeekOracle GitHub.
+
+Permission granted by the Steward is valid only when written, specific, and signed. No
+silence, custom, or prior practice creates permission.
+
+Governing law for licence disputes: the Steward's state/jurisdiction of residence at
+the time of the dispute, unless a separate written agreement applies.
+
+──────────────────────────────────────────────────────────────────────────────
+14. ACCEPTANCE
+──────────────────────────────────────────────────────────────────────────────
+By downloading, installing, running, using, integrating or distributing the Software,
+You accept this LICENSE. If You do not accept it, do not use the Software.
+
+Δ9Φ963 — use in light · build on the lattice · do not sell the seal.

@@ -1,0 +1,51 @@
+LYGO LLM CONSOLE — PC LOCAL — build 1.7.0
+Δ9Φ963 · sealed build · LYGO Sovereign License v3.0
+=======================================================================
+
+WHAT YOU JUST INSTALLED
+  The console, its engine, and its picture engine. Everything runs on this machine: the console,
+  the model server, the picture engine, the limbs. No account, no cloud, no telemetry.
+
+WHAT IS IN 1.7.0 THAT WAS NOT IN 1.5.6
+  * The download pair. The console can pull big files itself. Each stream's socket is bound to a
+    local address, so two network adapters can carry one file at once; several mirrors of the same
+    file queue inside one block, and a mirror that disagrees on size or ETag is refused by name
+    (a file stitched from two versions is wrong in a way nobody can see). `action=adapters check=true`
+    asks each path its own public address, because two adapters behind one router are ONE path.
+  * film — FilmCraft 0.6.0 (MIT OR Apache-2.0). The console can edit video and the agent can drive
+    the editor: 15 actions over its CLI, its control channel and its served web build.
+  * The Internet Archive pair. Search, read an archived copy as TEXT, and watch a list of links for
+    rot. A search that could not run is reported as a search that could not run, never as a search
+    that found nothing.
+  * The tasking/context system, and the core cap moved by measurement: 40 → 44 slots, 20,800 →
+    23,200 characters, argued per capability instead of refused by rule.
+  * Boot-path work: every module health call is bounded at 8 s on a daemon thread, so a stalled
+    network check is a NAMED GAP instead of a console that appears hung. load() went 20.6 s → 10.5 s.
+
+WHAT IS NOT IN THIS INSTALLER
+  * Model weights. They are fetched from the model vault with a digest check — run INSTALL.bat, or
+    point LYGO_MODELS at a folder that already holds them. The console scans ./models by default.
+  * The picture checkpoint. The engine ships; the checkpoint does not (SDXL Turbo is Stability's
+    non-commercial research licence, SD 1.5 is CreativeML Open RAIL-M). tools\sd-cpu\
+    FETCH_IMAGE_MODEL.bat fetches one once, resumable and size-checked, from its author's repo, and
+    names the licence that applies.
+
+HOW TO START
+  1. Run INSTALL.bat once. It seeds the workspace for you and does not copy any steward vault.
+  2. Start the console from the Start Menu shortcut, or LYGO_LLM_CONSOLE.bat in this folder.
+  3. Open the URL the launcher prints (default http://127.0.0.1:9641/).
+  Stop it with LYGO_LLM_CONSOLE_STOP.bat.
+
+WHAT IS NOT INCLUDED ON PURPOSE
+  Your own keys. The cloud endpoints stay disabled until YOU add a key in the console. Nothing in
+  this installer carries a credential, and the operator's own admin map is excluded from it.
+
+HONEST LIMITS
+  The console runs local shell and Python as you. It is not a sandbox. Run it as an unprivileged
+  user and do not expose it to an untrusted network. "Alpha" and "BETA 1" both appear in the docs;
+  what they mean here is: the suite is green, the build is sealed, and it still moves.
+
+LICENCE AND ATTRIBUTION
+  LYGO Sovereign License v3.0 — no resale, no rebranding, no modified redistribution. Third-party
+  components keep their own licences and are registered in NOTICE; the two copyleft engines
+  (ComfyUI GPL-3.0, VoiceStudio AGPL-3.0-only) are POINTED AT, never bundled.

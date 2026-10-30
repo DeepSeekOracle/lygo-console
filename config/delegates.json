@@ -1,0 +1,16 @@
+{
+  "_note": "The side-agent roster for the subagent_run / subagent_pool limbs. `free` = OpenCode's free model pool: no key, no account, no cost, but client-locked (403 from outside OpenCode, so it is reached by DRIVING the CLI), metered (~200 requests/day, per-model lockouts) and its limit is MASKED as an opaque server error. Use it for side tasks only: never hand a free engine a private operator context, because per-model data terms differ (some log for evaluation, some train on prompts; Space Bunny and LongCat publish zero retention). Edit this file to add or retire engines - the limb reads it on every call.",
+  "default": "opencode/deepseek-v4.1-flash-free",
+  "free": [
+    "opencode/glm-5.3-flash-free",
+    "opencode/deepseek-v4.1-flash-free",
+    "opencode/nemotron-3-ultra-free",
+    "opencode/nemotron-3.5-lightning-free",
+    "opencode/longcat-2.5-preview-free",
+    "opencode/cat-jam-free",
+    "opencode/mimo-v2.6-flash-free",
+    "opencode/space-bunny-free"
+  ],
+  "byo": {},
+  "_byo_note": "Optional: map an engine prefix to the key slot in config/api.json, for paid engines the operator already has. e.g. {\"deepseek\": \"deepseek\"} makes `-m deepseek/deepseek-flash` hand that one child process DEEPSEEK_API_KEY. Empty by default: the free pool needs nothing."
+}

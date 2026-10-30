@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LYGO">
+  <title>LYGO</title>
+  <rect width="64" height="64" fill="#0c0a08"/>
+  <circle cx="32" cy="30" r="22" fill="none" stroke="#e0b36a" stroke-width="1.4"/>
+  <circle cx="24" cy="30" r="12" fill="none" stroke="#e0b36a" stroke-width="1.2"/>
+  <circle cx="40" cy="30" r="12" fill="none" stroke="#7dd3fc" stroke-width="1.2"/>
+  <path d="M32 12v36" stroke="#e0b36a" stroke-width="0.7" opacity=".7"/>
+  <text x="32" y="58" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="#e0b36a" letter-spacing="2">LYGO</text>
+</svg>

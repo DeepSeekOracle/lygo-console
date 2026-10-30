@@ -1,0 +1,50 @@
+LYGO LLM CONSOLE — USB CLAW — build 1.7.0
+Δ9Φ963 · portable stick install · LYGO Sovereign License v3.0
+=======================================================================
+
+WHAT YOU JUST INSTALLED
+  A complete console on a stick: its own Python, its engine, its picture engine, its limbs and its
+  launcher. Plug it into any Windows machine, run LYGO_AGENT_STICK.bat, and nothing has to be
+  installed on the host. Sessions, notes, the RAG index, receipts and the token stay inside the kit
+  folder — copy the folder to another stick and it still works; delete it and nothing is left behind.
+
+WHAT IS IN 1.7.0 THAT WAS NOT IN 1.5.6
+  * The download pair. The console pulls big files itself. Each stream's socket is bound to a local
+    address, so two network adapters carry one file at once; several mirrors of one file queue
+    inside a block, and a mirror that disagrees on size or ETag is refused by name. `action=adapters
+    check=true` asks each path its own public address, because two adapters behind one router are
+    ONE path however many cables are in the wall.
+  * film — FilmCraft 0.6.0 (MIT OR Apache-2.0): 15 actions over its CLI, its control channel and its
+    served web build, so the agent can drive the editor and the operator can watch it.
+  * The Internet Archive pair — search, read an archived copy as TEXT, watch a list of links for rot.
+    A search that could not run is reported as a search that could not run, never as none found.
+  * The tasking/context system, with the core cap moved 40 to 44 slots and 20,800 to 23,200
+    characters by measurement rather than by rule.
+  * Boot-path work: module health calls are bounded at 8 s on a daemon thread, so a stalled network
+    check is a NAMED GAP instead of a console that looks hung (load() 20.6 s -> 10.5 s).
+
+WHAT IS NOT ON THE STICK
+  * Model weights. Point LYGO_MODELS at a folder that holds them, or let the vault fetch them.
+  * The picture checkpoint. The CPU engine ships in tools\sd-cpu\; the checkpoint does not
+    (CreativeML Open RAIL-M / SDXL Turbo's research licence). FETCH_IMAGE_MODEL.bat fetches one once,
+    resumable and size-checked, from its author's repo, and names the licence.
+  * Your admin map. config\admin.json is deliberately absent from this installer: the operator's own
+    drives and roots are not published. The console runs from kit-relative paths without it.
+
+HOW TO START
+  1. Run INSTALL.bat once (it seeds the workspace for you; it copies no steward vault).
+  2. Run LYGO_AGENT_STICK.bat. The console opens on http://127.0.0.1:9641/.
+  3. Stop it with LYGO_AGENT_STICK_STOP.bat.
+
+PORTS
+  console 9641 · engine 11441 · embed 11442 · colibri 11443 — overridable with LYGO_CONSOLE_PORT,
+  LYGO_LLAMA_PORT, LYGO_EMBED_PORT, LYGO_COLIBRI_PORT.
+
+HONEST LIMITS
+  The console runs local shell and Python as you. It is not a sandbox. Run it as an unprivileged user,
+  and do not expose it to an untrusted network. A stick that is removed while the engine is running
+  will take the engine with it — stop the console first.
+
+LICENCE AND ATTRIBUTION
+  LYGO Sovereign License v3.0 — no resale, no rebranding, no modified redistribution. Third-party
+  components keep their own licences and are registered in NOTICE.

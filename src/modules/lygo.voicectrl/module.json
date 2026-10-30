@@ -1,0 +1,72 @@
+{
+  "id": "lygo.voicectrl",
+  "title": "Voice studio controls",
+  "summary": "The voice actuator: start or stop the speech service, say something in a chosen voice, read a file back as text - and record every clip by the bytes really written.",
+  "version": "1.0.0",
+  "introduced": "1.6.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-26: a browser tab has no local VoiceStudio install to bridge to, so a card there could only offer a button that cannot work)"
+  },
+  "requires": {
+    "console": ">=1.9.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "atomicio",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "voice_harness",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/voice",
+      "handler": "data",
+      "legacy": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/voice",
+      "handler": "control",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.voicestudio",
+      "slot": "dock",
+      "title": "Voice studio",
+      "data": "GET /api/voice",
+      "refresh_s": 10,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [
+      "save/voice"
+    ],
+    "writes_via": "atomicio",
+    "gate": "p0"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_voice_studio.py"
+  ],
+  "docs": "04_MODULES/lygo.voicectrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "The actuator half of the voice pair: lygo.voiceinfo reads the facts and this module is where a voice is actually ASKED FOR. It says nothing itself - every clip leaves through the voice_harness machinery, which is the one place that knows how to call the separate application, and comes back with a receipt naming the absolute path, byte count and sha256 read BACK off the disk, because claimed and written must be the same thing. It owns exactly one thing - save/voice, the operator's engine and voice choice plus one record per clip - written through atomicio behind the p0 gate, and the text to be spoken is gated before anything is sent. It never writes into VoiceStudio's own folders. `stop` refuses by name to kill a backend this console did not start: a service started by VoiceStudio's own window belongs to the operator, and taking it down would take their application with it."
+}

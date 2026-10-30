@@ -1,0 +1,64 @@
+{
+  "id": "lygo.plexoinfo",
+  "family": "info",
+  "title": "Downloads",
+  "summary": "The download card: LYGO's own parallel engine, the operator's Plexo install, what is downloading now and what has already landed.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(the Plexo half needs the operator to run scripts/fetch_plexo.ps1 on this stick - a 246 MB installer - while LYGO's own engine works with no payload at all and reads the Plexo rows as 'not installed here', which is a true reading, not a fault)",
+    "web": "N/A(by the same steward decision as the other cards that report on local processes: a browser tab has no download engine of its own and no folder to report on)"
+  },
+  "requires": {
+    "console": ">=1.7.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "auth"
+  ],
+  "machinery": [
+    "plexo_tools",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/plexoinfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.plexo",
+      "slot": "dock",
+      "title": "Downloads",
+      "data": "GET /api/plexoinfo",
+      "refresh_s": 15,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_plexo.py",
+    "tests/test_plexo.py"
+  ],
+  "docs": "04_MODULES/lygo.plexoinfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-out (family 'info'), the facts half of the download pair. Every row is asked of its OWNER: plexo_tools.state() for what is installed and what is answering, jobs() for the live jobs (bytes, percent, MB/s, streams), pin() for the pinned upstream release, credit() for who wrote what and under which licence. Nothing is re-derived here, so this card cannot drift out of step with the limb the agent calls. WHAT IT WILL NOT DO: it never claims a download is faster without the job's own numbers; it names the two halves SEPARATELY (LYGO's engine, which ships here, and Plexo, which is a fetched payload) because a kit can have one and not the other; and a kit with no Plexo stays a TRUE reading ('not installed here; run scripts/fetch_plexo.ps1') rather than a red fault. It owns no state, writes nothing and gates nothing - its own test scans this source for write calls."
+}

@@ -1,0 +1,64 @@
+{
+  "id": "lygo.voiceinfo",
+  "family": "info",
+  "title": "Voice studio",
+  "summary": "Is VoiceStudio here: the app, the runtime its own shell staged, the speech service on its port, and why this console bridges to it instead of embedding it.",
+  "version": "1.0.0",
+  "introduced": "1.6.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-26: a browser tab has no local VoiceStudio install to bridge to, so a card there could only offer a button that cannot work)"
+  },
+  "requires": {
+    "console": ">=1.9.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "voice_harness",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/voiceinfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.voiceinfo",
+      "slot": "dock",
+      "title": "Voice studio",
+      "data": "GET /api/voiceinfo",
+      "refresh_s": 20,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_voice_studio.py"
+  ],
+  "docs": "04_MODULES/lygo.voiceinfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-out (family 'info'), the voice card beside the picture engine and the song studio: what this machine can actually SAY with. Every fact is asked of its OWNER - voice_harness for the install, the runtime the vendor's shell staged, the service on its port and the licence boundary - and none of it is re-derived here, so this card cannot drift out of step with the harness that speaks. WHAT IT WILL NOT DO: it never claims the service is up because a process exists (the harness probes /api/health, the route the vendor's own shell polls), it never calls 'not installed yet' or 'still installing' a fault - both are true states on a fresh machine and are reported as states with the reason - and it never writes into the VoiceStudio install or runtime, which are the operator's application. A check that could not run is a named gap in missing[] and drags the card off green. It owns no state, writes nothing and gates nothing: its own test scans this source for write calls."
+}

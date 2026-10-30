@@ -1,0 +1,71 @@
+LYGO Local Agent Console 1.3.2 — PC LOCAL — what you just installed
+===================================================================
+
+You now have one console with BOTH engines inside:
+
+  * the CHAT engine (llama.cpp) — it boots a local model (gemma4-12b reads pictures and audio,
+    qwen2.5-coder-7b is the fast tasker), and
+  * the PICTURE engine (stable-diffusion.cpp, tools\sd-cpu, 45 MB) — the same engine the studio
+    console uses, in its CPU build: no CUDA, no card, no admin rights, nothing on PATH.
+
+THE FOUR STEPS
+--------------
+1. Fetch the brains (if you have not already). Either take the FULL installer, which carries
+   gemma4-12b inside, or run:
+
+       python models\fetch_models.py --profile full --yes --dest "C:\LYGO\LLM_CONSOLE\models"
+       python models\fetch_models.py --profile basic      # gemma4-12b + projector, 7.3 GB
+
+   Every file is SHA-256 checked against models.lock.json before it is kept, and it comes from our
+   own vault (HuggingFace DeepSeekOracle/lygo-console-models, pinned revision).
+
+2. Fetch the picture checkpoint — ONE file, once:
+
+       tools\sd-cpu\FETCH_IMAGE_MODEL.bat          (or the Start-menu entry "Fetch the picture checkpoint")
+
+   SDXL Turbo, 6.94 GB, 4 steps, the fast one. `-Model sd15` gets SD 1.5 (4.27 GB, 20 steps) instead;
+   `-From <url>` takes a checkpoint of your own. It resumes if the line drops, checks the byte count,
+   and DELETES a file that fails the check rather than keeping a bad one.
+
+   Why the checkpoint is not in this installer: it is 4-7 GB, and its licence is its author's, not
+   ours — SDXL Turbo is Stability AI's non-commercial research licence and SD 1.5 is CreativeML Open
+   RAIL-M. Fetched from the author's own repository, the licence that applies is the one that applies,
+   and nothing is redistributed by us.
+
+3. Boot it: LYGO_LLM_CONSOLE.bat (desktop shortcut or Start menu). Scan drives when it asks.
+   Ports: console 9641, engine 11441.
+
+4. Draw: ask the console in plain words — "draw me a lime green sports car in a futuristic neon city"
+   — or use the Image generation module on the web portal:
+
+       https://chatagent.ca/portal/?console=http://127.0.0.1:9642
+
+   (9642 is the gateway's own default port; start it with PUBLIC_GATEWAY.bat when you want the web
+   page to reach this machine. It binds 127.0.0.1 — this PC only — unless you ask for more.)
+
+WHAT IT COSTS, MEASURED (studio box, 8 GB card, chat model resident)
+-------------------------------------------------------------------
+   512x512    about 55 s
+   1024x1024  about 5 minutes      CPU route (the one this installer carries)
+   1024x1024  about 12.5 s         CUDA build with the card free (not in this installer)
+
+A fresh install needs NO configuration for pictures: media_root() falls back to the install root, so
+the console finds tools\sd-cpu\sd-cli.exe and models\sd\*.safetensors by itself. A machine that
+already has its own media root (a studio PC with <MEDIA>) keeps it exactly as before.
+
+WHERE YOUR PICTURES GO
+----------------------
+    <install>\workspace\images\gen-<stamp>.png
+
+with a receipt naming the route (cpu / cuda), the engine, the steps, the seconds and the bytes.
+
+VERIFY WHAT YOU DOWNLOADED
+--------------------------
+The installers published for this build carry their own SHA-256 on the SkillHub catalog
+(https://chatagent.ca/lygoskillhub.html) and on our HuggingFace vault
+(https://huggingface.co/DeepSeekOracle/lygo-console-builds). Check yours:
+
+    CertUtil -hashfile LYGO_LLM_CONSOLE_1.3.2_PC_SETUP.exe SHA256
+
+Licences: the kit is LYGO Sovereign Licence v3.0 (no resale, no rebranding, no modified
+redistribution). llama.cpp and stable-diffusion.cpp are MIT. Model weights stay their authors'.

@@ -1,0 +1,81 @@
+LYGO Local Agent Console - PC LOCAL - FULL build 1.5.6 (2026-09-25)
+
+WHAT 1.5.6 ADDS
+  * The RAG index write no longer races itself. One temp path per write (pid and thread) plus a
+    write lock means a busy console stops printing "could not write the index" on a healthy day.
+    Reproduced before the fix (8 threads x 25 writes: 33 FileNotFoundError + 4 PermissionError),
+    then re-verified at 24 threads with zero errors and no temp files left behind.
+  * A fresh install no longer prints that line on its very first boot either.
+
+WHAT 1.5.5 ADDED
+  * A fresh install no longer prints a RAG error on its first boot.
+  * The installer no longer ships workspace\notes (bench scratch, not part of the kit).
+
+  * The USB copy is carried up to the live tree again - byte-identical across the kit - and
+    the picture engine's own fetch script and notes travel with it.
+  * Both FULL installers are rebuilt from this release's sealed payload, so what you install
+    is exactly what was tested: this is the build the release number names.
+
+WHAT YOU JUST INSTALLED
+  Everything, sealed: the console, the chat engine, the picture engine, the music systems,
+  and the weights themselves - gemma4-12b with its projector, the qwen2.5-coder, the
+  embedding model, and the SD 1.5 image checkpoint with its licence.
+  It installs to C:\LYGO\LLM_CONSOLE and it runs on its own - no cloud, no account, and
+  nothing to download before you can draw a picture or ask a question.
+
+WHAT 1.5.5 ADDS (the new systems)
+  * The lyric sheet speaks the engine's own language. The box opens with the exact template
+    YuE reads (one section per single-word [tag]); one press puts it back if you clear it.
+  * "Convert" rewrites your own lyric format into that one, and "Check" tells you what YuE
+    would actually sing - both answer without spending a render.
+  * The agent can write a whole song into the box: give it a brief, or let it pick from the
+    engine's own tag vocabulary.
+  * Render fixes: the last section of a song used to be dropped, [VERSE 1] used to fold into
+    [verse1] instead of [verse], and header lines could be sung instead of read. All three
+    are fixed and covered by tests.
+
+HOW TO RUN
+  PC  : C:\LYGO\LLM_CONSOLE\LYGO_LLM_CONSOLE.bat  (or the desktop shortcut)
+  USB : plug the stick in and run LYGO_MASTER_MANAGER.bat from the stick root.
+
+THE FILES BESIDE THIS EXE
+  This build is 17 GB, and Windows cannot load a Setup.exe bigger than ~4.2 GB, so the
+  installer is split: LYGO_LLM_CONSOLE_1.5.6_PC_SETUP_FULL.exe plus its .bin slices.
+  COPY THEM TOGETHER. If a slice is missing the install stops and says so - it never
+  half-installs.
+
+TWO THINGS THE BUILD DELIBERATELY DOES NOT CARRY
+  Keys   - config/api.json is never part of a build. Open the console, Settings, and paste
+           your own provider keys.
+  Voices - the operator's own sessions, memory, songs and pictures stay on the machine that
+           made them; they are excluded from the payload by construction.
+
+The brains here are Apache-2.0 (Google DeepMind Gemma 4 12B, Alibaba Qwen2.5-Coder, Nomic AI)
+and the image checkpoint is CreativeML Open RAIL-M - both licence texts are in models\.
+SDXL Turbo is NOT included (Stability's non-commercial research licence); the optional fetch
+in the Start menu downloads it from its author and shows you the licence first.
+
+If anything here surprises you, stop and read BUILD_NOTES.md in the install folder - every
+release, every defect, and every decision that shaped it is written down there.
+
+LICENCE AND ATTRIBUTION
+  This build is the LYGO Sovereign License v3.0 (D9Phi963-LICENSE-v3.0): source-available and brand-protective. Use it and
+  build on it; do not resell, rebrand or white-label it, and do not strip its attribution or its
+  seals. It is NOT open source, and it is NOT MIT.
+
+  The installer showed you this licence before it copied anything (LicenseFile), and the same text
+  lands in the install folder with two companions. In order of authority:
+    LICENSE          the licence itself - LYGO Sovereign License v3.0
+    LICENSING.md     the same deal in plain English; explains, does not override LICENSE
+    NOTICE           steward, canonical sources, required attribution wording
+  Brand rules live in TRADEMARKS.md. If any summary disagrees with LICENSE, LICENSE controls.
+
+  Required attribution in derived work and in public use:
+    "LYGO Protocol / LYGO CLAW / LYGO PC LOCAL CONSOLE (c) Justin Helmer
+     (Lightfather - Excavationpro - DeepSeekOracle). LYGO Sovereign License v3.0."
+
+  Third-party work keeps its own licence and travels unmodified: the GGUF models are Apache-2.0
+  (their authors'), and the bundled SD 1.5 checkpoint is CreativeML Open RAIL-M with its licence
+  text beside it - that licence is why SD 1.5 is the checkpoint carried, and SDXL Turbo is
+  fetched rather than redistributed. Not affiliated with or endorsed by Google, Alibaba, Meta,
+  Anthropic, OpenAI, xAI, Mistral or the llama.cpp project. No warranty.

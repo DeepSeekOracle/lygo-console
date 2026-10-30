@@ -1,0 +1,32 @@
+{
+  "id": "lygo.world",
+  "title": "World clock",
+  "summary": "Time, date and the city clocks the console shows; read-only, no state of its own.",
+  "version": "1.0.0",
+  "introduced": "1.2.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "FULL",
+    "web": "N/A(web parity is decided in WO-0002)"
+  },
+  "requires": {
+    "console": ">=1.1.1",
+    "python": ["3.11", "3.13"],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": ["paths", "atomicio", "receipts", "p0", "auth"],
+  "machinery": ["world_clock"],
+  "routes": [
+    { "method": "GET", "path": "/api/world", "handler": "world", "legacy": true }
+  ],
+  "limbs": [],
+  "panes": [],
+  "state": { "owns": [], "writes_via": "atomicio", "gate": "none" },
+  "health": "health",
+  "tests": ["tests/test_module_host.py"],
+  "docs": "04_MODULES/lygo.world/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "M1 shim: the route keeps the exact 1.1.1 body (world_clock.pulse()). Its weather lookup is cached in memory only, so this module owns no state and its gate is 'none'. The clock pane moves into the module in Phase M2; until then the pane is the existing markup and no DOM id has changed. limb_count 0 is correct: the world clock is not a model tool."
+}

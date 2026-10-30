@@ -1,0 +1,11 @@
+{
+  "_comment": "OPTIONAL per-machine overrides. Copy this file to config/local.json (gitignored) and edit; config/local.json is overlaid on config/console.json, and an exported LYGO_* environment variable beats both. Do not put steward vaults or API keys in here.",
+  "scan_roots": [
+    "./models"
+  ],
+  "scan_roots_comment": "Kit-relative by default - './models' means <kit>/models, so a copy of the kit on D: finds its own models with no edit. %VARS%, ~ and absolute paths all work; add a mapped drive only if the models really live there (for example \"I:/LYGO_MODELS\"). Optional Colibri HF dirs (config.json + safetensors) can be scan_roots too. LYGO_MODELS is also honored at scan time - set it to this machine's vault, e.g. I:\\LYGO_MODELS.",
+  "ports_comment": "Second copy of the kit? Give it its own triplet so both can run at once. The 'ports' block is optional and per machine; the same effect comes from LYGO_CONSOLE_PORT / LYGO_LLAMA_PORT / LYGO_EMBED_PORT / LYGO_COLIBRI_PORT.",
+  "ports": {},
+  "ports_comment2": "Left empty on purpose: config/console.json decides. It used to ship the source tree's concrete ports, so every copy that seeded this file pinned itself to 9641/11441 and fought the original for the port. To run a second copy at once, put its own values here, e.g. {'port': 9741, 'llama_port': 11541, 'embed_port': 11542, 'colibri_port': 11543}.",
+  "comment": "Copy to local.json (gitignored). Do not add steward vaults. Optional Colibri HF dirs (config.json + safetensors) can be scan_roots."
+}

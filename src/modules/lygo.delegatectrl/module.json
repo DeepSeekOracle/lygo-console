@@ -1,0 +1,74 @@
+{
+  "id": "lygo.delegatectrl",
+  "title": "Side agents",
+  "summary": "Free agents two ways: hand ONE side task to an external agent loop, or run the console\u2019s OWN turns on a free engine - both with the receipt of what really happened.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(the free pool is reached through the OpenCode CLI, a global npm install a stick does not carry; the card names it and the buttons refuse by name)",
+    "web": "N/A(same steward decision as the other actuator cards: a browser tab cannot start a process on this machine)"
+  },
+  "requires": {
+    "console": ">=1.7.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "atomicio",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "delegate_tools",
+    "free_brain"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/delegate",
+      "handler": "data",
+      "legacy": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/delegate",
+      "handler": "control",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.delegatectrl",
+      "slot": "dock",
+      "title": "Side agents",
+      "data": "GET /api/delegate",
+      "refresh_s": 20,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [
+      "save/delegate"
+    ],
+    "writes_via": "atomicio",
+    "gate": "p0"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_delegate.py",
+    "tests/test_limb_subagent.py",
+    "tests/test_free_brain.py"
+  ],
+  "docs": "04_MODULES/lygo.delegatectrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "The card and buttons for the side-agent pair in `delegate_tools` (`subagent_run`, `subagent_pool`), which are ALREADY registered in limbs.py - so this module registers NO limb and declares none: listing it here would register the same two tools twice and change the tool set on load. It owns exactly one thing, save/delegate (the probe result and one record per task handed out), written through atomicio behind the p0 gate. WHAT IT WILL NOT DO: it will not call the pool available because the roster lists it - Probe pool asks each engine to answer once and the card reads 'not checked' until it has, because the free tier is metered and its limit is masked as an opaque server error; it will not spend a request on boot (health is a local read, no socket); it will not translate 'Unexpected server error' into a diagnosis; and it will not hand private operator context to a free tier, whose per-model data terms differ - the card says so where the operator reads it. THE SWITCH: `Use free brain` and `Back to paid / local` point the console's OWN turns at the free pool through the in-process adapter in `free_brain` - cloud_api's existing `custom` row, so no core file changes and no second brain path - and restore exactly the provider, model and enabled flag that were there before. It snapshots no key material. A free turn spawns the CLI (seconds, no streaming) and is metered, which the card states next to the button."
+}

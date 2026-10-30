@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-cookie-key="chatagent_cookies">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https: blob:; connect-src 'self' https: http://127.0.0.1:9641 http://localhost:9641 http://127.0.0.1:11434 http://127.0.0.1:11441">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(self), payment=(), usb=()">
+<title>LYGO API Portal — bring Groq, OpenAI, Claude, Grok | chatagent.ca</title>
+<meta name="description" content="LYGO API Portal: connect Groq, OpenAI, Claude, Grok, DeepSeek or any OpenAI-compatible key. Browser agent tools (wiki, fetch, weather, Δ9 champions). Full local GGUF console is a separate SkillHub download. No GPU on this page.">
+<meta name="author" content="Justin Helmer / Excavationpro / Lightfather">
+<meta name="creator" content="Justin Helmer">
+<meta name="publisher" content="chatagent.ca">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="googlebot" content="index, follow, max-image-preview:large">
+<meta name="bingbot" content="index, follow">
+<meta name="keywords" content="LYGO, LLM portal, free AI chat, local LLM, Hugging Face, Δ9 champions, Excavationpro, Justin Helmer, Lightfather, chatagent.ca, OpenClaw, llama.cpp">
+<meta name="theme-color" content="#0c0a08">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
+<meta name="application-name" content="LYGO LLM Portal">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LYGO Portal">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="canonical" href="https://chatagent.ca/portal/">
+<link rel="alternate" hreflang="en" href="https://chatagent.ca/portal/">
+<link rel="manifest" href="/portal/manifest.json">
+<link rel="icon" href="/portal/logo.svg" type="image/svg+xml">
+<link rel="icon" href="/portal/logo.jpg" type="image/jpeg" sizes="512x512">
+<link rel="apple-touch-icon" href="/portal/logo.jpg">
+<link rel="image_src" href="https://chatagent.ca/portal/og.jpg">
+<link rel="author" href="https://chatagent.ca/about.html">
+<link rel="license" href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/LICENSE">
+<link rel="sitemap" type="application/xml" href="https://chatagent.ca/sitemap.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260916x">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="chatagent.ca">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://chatagent.ca/portal/">
+<meta property="og:title" content="LYGO API Portal — bring your key">
+<meta property="og:description" content="Connect Groq, OpenAI, Claude, Grok or any OpenAI-compatible API. LYGO-aligned agent tools in the browser. Local FULL console is a SkillHub download.">
+<meta property="og:image" content="https://chatagent.ca/portal/og.jpg">
+<meta property="og:image:secure_url" content="https://chatagent.ca/portal/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="LYGO LLM Portal — gold Δ9 phi seal, free public agent studio on chatagent.ca">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Excavationpro">
+<meta name="twitter:creator" content="@Excavationpro">
+<meta name="twitter:title" content="LYGO API Portal — bring your key">
+<meta name="twitter:description" content="Groq/OpenAI/Claude/Grok in a LYGO agent studio. Local FULL console on SkillHub.">
+<meta name="twitter:image" content="https://chatagent.ca/portal/og.jpg">
+<meta name="twitter:image:alt" content="LYGO LLM Portal seal — Δ9Φ963 gold and cyan">
+<meta name="twitter:url" content="https://chatagent.ca/portal/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://chatagent.ca/portal/#app",
+      "name": "LYGO LLM Portal",
+      "alternateName": ["LYGO Free LLM Portal", "LYGO Agent Studio"],
+      "url": "https://chatagent.ca/portal/",
+      "image": "https://chatagent.ca/portal/og.jpg",
+      "logo": "https://chatagent.ca/portal/logo.jpg",
+      "description": "LYGO API Portal: connect a free or paid LLM key (Groq, OpenAI, Claude, Grok, …). Browser agent tools. Full local console is a separate SkillHub download.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "isAccessibleForFree": true,
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "author": {"@type": "Person", "name": "Justin Helmer", "alternateName": ["Excavationpro", "Lightfather"], "url": "https://chatagent.ca/about.html", "sameAs": ["https://x.com/Excavationpro", "https://github.com/DeepSeekOracle"]},
+      "publisher": {"@type": "Organization", "name": "chatagent.ca", "url": "https://chatagent.ca/", "logo": {"@type": "ImageObject", "url": "https://chatagent.ca/portal/logo.jpg"}},
+      "isPartOf": {"@type": "WebSite", "name": "chatagent.ca", "url": "https://chatagent.ca/"}
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://chatagent.ca/portal/#page",
+      "url": "https://chatagent.ca/portal/",
+      "name": "LYGO LLM Portal",
+      "isPartOf": {"@id": "https://chatagent.ca/portal/#app"},
+      "inLanguage": "en-US",
+      "dateModified": "2026-09-16"
+    }
+  ]
+}
+</script>
+</head>
+<body class="public-mode branded">
+<a class="skip" href="#msg">Skip to chat</a>
+<header>
+  <div class="brand-lockup">
+    <a class="mark" href="https://chatagent.ca/" title="chatagent.ca">
+      <img src="logo.jpg" width="72" height="72" alt="LYGO Δ9 phi seal">
+    </a>
+    <div>
+      <p class="kicker">Δ9Φ963 · chatagent.ca · RESOURCE</p>
+      <h1>LYGO API Portal</h1>
+      <p class="sub">Bring a <strong>free or paid API key</strong> (Groq, OpenAI, Claude, Grok, DeepSeek, Hugging Face, or any OpenAI-compatible URL). This page is a LYGO-aligned <em>agent studio in the browser</em> — 50+ tools (wiki, fetch, weather, GitHub, lattice handshake, Δ9 champions). It does <strong>not</strong> host a GPU. Full local GGUF console: <a href="https://chatagent.ca/lygoskillhub.html#lygo-llm-kernel">SkillHub FULL</a>. Steward: <a href="https://chatagent.ca/about.html">Justin Helmer</a>.</p>
+      <p class="sub syslabel" data-system="api_only"><strong>WEB PORTAL (API ONLY)</strong> — no GPU, no local engine: you bring the key, and the key is the only cost. <strong>Already built and online</strong>: an easy API agent portal anyone can use from a web page. The same console and limbs also run as <strong>USB LOCAL</strong> (the stand-alone agent — everything onboard the stick, plug it in and go, mobile) and <strong>PC LOCAL</strong> (the full admin console on that PC — the build that becomes the public version).</p>
+      <nav class="site-nav" aria-label="Site">
+        <a href="https://chatagent.ca/">Home</a>
+        <a href="https://chatagent.ca/portal/" aria-current="page">Portal</a>
+        <a href="https://chatagent.ca/lygo-llm-console.html">Console kit</a>
+        <a href="https://chatagent.ca/lygoskillhub.html">SkillHub</a>
+        <a href="https://chatagent.ca/sources/">LYGO TV</a>
+        <a href="https://asiancoastline.com/listen.html" rel="noopener">Listen</a>
+        <a href="https://chatagent.ca/champions.html">Champions</a>
+        <a href="https://www.paypal.com/paypalme/ExcavationPro" rel="noopener">Donate</a>
+      </nav>
+    </div>
+  </div>
+  <div id="health" class="health">API portal · paste key → Connect</div>
+  <div class="conn">
+    <select id="mode" title="API provider">
+      <option value="groq" selected>Groq (free tier)</option>
+    </select>
+    <select id="model" title="Model is chosen for you" aria-label="Model">
+      <option value="openai/gpt-oss-20b" selected>openai/gpt-oss-20b</option>
+    </select>
+    <input id="hf-token" type="password" placeholder="Paste API key — stays in this browser" autocomplete="off">
+    <input id="endpoint" type="text" placeholder="Endpoint (custom only)" autocomplete="off" hidden>
+    <button type="button" id="connect">Connect</button>
+    <label class="chk hide-public" id="full-wrap"><input type="checkbox" id="full"> Full LYGO limbs</label>
+  </div>
+  <p class="mode-pill" id="mode-help">Paste a Groq key → Connect. The model is selected automatically. Guide: <a href="/guides/how-to-lygo-llm-portal.html">How to connect</a>.</p>
+</header>
+<section id="world" class="world" aria-label="World time">
+  <div class="world-now">
+    <div id="world-local" class="world-local">local —</div>
+    <div id="world-utc" class="world-utc">UTC —</div>
+  </div>
+  <div id="world-cities" class="world-cities"></div>
+</section>
+<main>
+  <nav class="rail">
+    <h2>Continuity</h2>
+    <div class="cont-tabs" role="tablist">
+      <button type="button" class="on" data-cont="soul">Soul</button>
+      <button type="button" data-cont="id">Identity</button>
+      <button type="button" data-cont="mem">Memory</button>
+    </div>
+    <div id="pane-soul" class="cont-pane"><textarea id="soul-edit" spellcheck="false" aria-label="SOUL.md"></textarea></div>
+    <div id="pane-id" class="cont-pane" hidden><textarea id="id-edit" spellcheck="false" aria-label="IDENTITY.md"></textarea></div>
+    <div id="pane-mem" class="cont-pane" hidden><textarea id="mem-edit" spellcheck="false" aria-label="MEMORY.md"></textarea></div>
+    <p class="hint">Shipped with this portal. Edits stay in your browser. <button type="button" id="id-reset">Reset defaults</button></p>
+    <h2>Skills</h2>
+    <p class="hint">Already on this page. Toggle on/off — no download. 15 champions + LYGO modules.</p>
+    <div id="skills-list" class="skills-list"></div>
+    <p class="hint" id="skill-pack">Loading pack…</p>
+    <h2>Agent limbs</h2>
+    <p class="hint">All browser-safe tools are installed on this page. Disk/shell stay on the local console.</p>
+    <div class="limbs">
+      <button type="button" data-limb="wiki">wiki</button>
+      <button type="button" data-limb="weather">weather</button>
+      <button type="button" data-limb="now">now</button>
+      <button type="button" data-limb="hn">HN</button>
+      <button type="button" data-limb="github">GitHub</button>
+      <button type="button" data-limb="handshake">lattice</button>
+      <button type="button" data-limb="whoami">whoami</button>
+      <button type="button" data-limb="iss">ISS</button>
+      <button type="button" data-limb="quake">quakes</button>
+      <button type="button" data-limb="howto">How to connect</button>
+      <button type="button" data-limb="skillhub">SkillHub FULL</button>
+      <button type="button" data-limb="kit">Console docs</button>
+    </div>
+    <h2>Full local console</h2>
+    <p class="hint">GGUF scan, folders, SkillHub FULL, USB CLAW — not this webpage.</p>
+    <p class="hint">
+      <a href="https://chatagent.ca/lygoskillhub.html#lygo-llm-kernel">Download from SkillHub</a><br>
+      <a href="https://chatagent.ca/lygo-llm-console.html">lygo-llm-console.html</a><br>
+      <a href="https://clawhub.ai/deepseekoracle/skills/lygo-llm-console">ClawHub map</a>
+    </p>
+    <pre class="ai-card" id="ai-card">name: LYGO API Portal
+url: https://chatagent.ca/portal/
+channel: PUBLIC RESOURCE — API keys in the visitor browser
+not: hosted GPU; admin disks; vaults
+providers: groq, openrouter, openai, xai, deepseek, mistral, together, fireworks, gemini, anthropic, huggingface, custom OpenAI-compat
+browser_limbs: 50+ HTTPS + tab tools (wiki, fetch, weather, github, lattice_handshake, champions, …); no disk/shell
+full_local_kit: https://chatagent.ca/lygoskillhub.html#lygo-llm-kernel
+docs: https://chatagent.ca/lygo-llm-console.html
+how_to: https://chatagent.ca/guides/how-to-lygo-llm-portal.html
+canon: dual ledgers / Haven Star Chart
+steward: Justin Helmer / Excavationpro / Lightfather
+</pre>
+  </nav>
+  <section class="chat-panel">
+    <div id="log" class="log" aria-live="polite"></div>
+    <form id="form" class="composer">
+      <input id="msg" type="text" placeholder="Connect an API, then ask…" autocomplete="off" autofocus>
+      <button type="button" id="attach-file">Attach file</button>
+      <button type="submit">Send</button>
+    </form>
+    <div class="np-foot" style="margin:0.4rem 0.2rem">
+      <button type="button" id="sess-save">Save session as…</button>
+      <button type="button" id="sess-load">Load session</button>
+    </div>
+  </section>
+  <aside>
+    <h2>Trace</h2>
+    <pre id="limb-out" class="limb-out">public · no server shell</pre>
+    <section class="notepad" id="notepad">
+      <h2>Notepad</h2>
+      <p class="hint">Browser memory, or Save as… to a file you choose.</p>
+      <textarea id="np-body" placeholder="Scratch pad…"></textarea>
+      <div class="np-foot">
+        <button type="button" id="np-save">Save in browser</button>
+        <button type="button" id="np-disk">Save notepad as…</button>
+        <span id="np-status" class="hint">localStorage</span>
+      </div>
+    </section>
+  </aside>
+</main>
+<footer class="media-dock" aria-label="Radio and TV">
+  <audio id="radioEl" preload="auto"></audio>
+  <div id="radioDock" class="radio-inline">
+    <button type="button" id="radioPlay">Play</button>
+    <button type="button" id="radioNext">Next</button>
+    <button type="button" id="radioMute">Mute</button>
+    <label class="radio-vol" title="Radio volume">Vol
+      <input type="range" data-radio-vol min="0" max="100" value="45" aria-label="Radio volume">
+      <span id="radioVolPct">45%</span>
+    </label>
+    <span id="radioTitle" class="radio-title-inline">Radio</span>
+    <a id="radioListen" href="https://asiancoastline.com/listen.html" target="_blank" rel="noopener">Listen hub</a>
+    <a id="radioTv" href="https://chatagent.ca/sources/" target="_blank" rel="noopener">LYGO TV</a>
+    <span id="radioHint" class="hint"></span>
+  </div>
+</footer>
+<section class="legal how" id="disclaimer">
+  <h2>Two products — do not mix them</h2>
+  <ol>
+    <li><strong>This page (API portal).</strong> You already have a Groq / OpenAI / Claude / Grok / DeepSeek / Hugging Face / OpenRouter key (or any OpenAI-compatible URL). Paste it → Connect → chat. Keys stay in <em>your</em> browser. chatagent.ca is static GitHub Pages and never sees the key.</li>
+    <li><strong>FULL local LYGO LLM Console.</strong> Your own GGUF models, folders, SkillHub FULL, USB CLAW. Download: <a href="https://chatagent.ca/lygoskillhub.html#lygo-llm-kernel">SkillHub FULL kernel</a> · docs <a href="https://chatagent.ca/lygo-llm-console.html">lygo-llm-console.html</a> · ClawHub <a href="https://clawhub.ai/deepseekoracle/skills/lygo-llm-console">lygo-llm-console</a>.</li>
+  </ol>
+  <p>Step-by-step: <a href="/guides/how-to-lygo-llm-portal.html">How to use the LYGO API portal</a>.</p>
+  <h2 id="free-keys">Free and near-free API keys</h2>
+  <p>Limits change. Prefer the provider’s own page. This portal accepts <strong>any OpenAI-compatible</strong> key: pick the vendor or choose <em>Any OpenAI-compatible URL</em>, paste base + key + model id. Keys stay in this tab.</p>
+  <table class="keys-table">
+    <thead><tr><th>Get a key</th><th>Typical free offer</th><th>Use here</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://console.groq.com/keys" rel="noopener">Groq</a></td><td>No card. Default model <code>openai/gpt-oss-20b</code>. Llama 3.1 8B Instant is enterprise-only now.</td><td><button type="button" data-fill="groq">Fill Groq</button></td></tr>
+      <tr><td><a href="https://aistudio.google.com/apikey" rel="noopener">Google AI Studio (Gemini)</a></td><td>No card. Gemini Flash/Pro. Generous daily cap.</td><td><button type="button" data-fill="gemini">Fill Gemini</button></td></tr>
+      <tr><td><a href="https://openrouter.ai/keys" rel="noopener">OpenRouter</a></td><td>Email. Many models with <code>:free</code> suffix. ~50 req/day until you add credits.</td><td><button type="button" data-fill="openrouter">Fill OpenRouter</button></td></tr>
+      <tr><td><a href="https://cloud.cerebras.ai" rel="noopener">Cerebras</a></td><td>Very fast wafer inference. Free/trial Llama &amp; Qwen.</td><td><button type="button" data-fill="cerebras">Fill Cerebras</button></td></tr>
+      <tr><td><a href="https://huggingface.co/settings/tokens" rel="noopener">Hugging Face</a></td><td>Free account. Router + Inference Providers.</td><td><button type="button" data-fill="huggingface">Fill HF</button></td></tr>
+      <tr><td><a href="https://console.mistral.ai" rel="noopener">Mistral</a></td><td>Free/studio credits, no card on default Free.</td><td><button type="button" data-fill="mistral">Fill Mistral</button></td></tr>
+      <tr><td><a href="https://build.nvidia.com" rel="noopener">NVIDIA NIM</a></td><td>Large catalog. Phone verify. OpenAI-compat.</td><td><button type="button" data-fill="nvidia">Fill NVIDIA</button></td></tr>
+      <tr><td><a href="https://dashboard.cohere.com/api-keys" rel="noopener">Cohere</a></td><td>Trial key, eval limits.</td><td><button type="button" data-fill="cohere">Fill Cohere</button></td></tr>
+      <tr><td><a href="https://cloud.sambanova.ai" rel="noopener">SambaNova</a></td><td>Cloud Llama. Signup credits vary.</td><td><button type="button" data-fill="sambanova">Fill SambaNova</button></td></tr>
+      <tr><td><a href="https://llm7.io" rel="noopener">LLM7.io</a></td><td>Free OpenAI-compat endpoint.</td><td><button type="button" data-fill="llm7">Fill LLM7</button></td></tr>
+      <tr><td><a href="https://z.ai" rel="noopener">Z.ai / GLM</a></td><td>Flash models, cheap/free tiers in some regions.</td><td><button type="button" data-fill="zai">Fill Z.ai</button></td></tr>
+      <tr><td><a href="https://deepinfra.com" rel="noopener">DeepInfra</a></td><td>Small signup credit. Open models.</td><td><button type="button" data-fill="deepinfra">Fill DeepInfra</button></td></tr>
+      <tr><td><a href="https://app.hyperbolic.xyz" rel="noopener">Hyperbolic</a></td><td>Signup credit. Open-weight models.</td><td><button type="button" data-fill="hyperbolic">Fill Hyperbolic</button></td></tr>
+      <tr><td><a href="https://novita.ai" rel="noopener">Novita</a></td><td>Trial credit. OpenAI-compat.</td><td><button type="button" data-fill="novita">Fill Novita</button></td></tr>
+      <tr><td><a href="https://siliconflow.com" rel="noopener">SiliconFlow</a></td><td>Small credit. Qwen and more.</td><td><button type="button" data-fill="siliconflow">Fill SiliconFlow</button></td></tr>
+      <tr><td><a href="https://platform.deepseek.com" rel="noopener">DeepSeek V4.1 Flash</a></td><td><strong>Deal (official, Sep 2026):</strong> model <code>deepseek-flash</code> · 1M context · tools · vision. Off-peak <strong>$0.15 in / $0.60 out</strong> per 1M (cache-hit input <strong>$0.003</strong>). Peak is 2× (Mon–Fri 01:00–04:00 &amp; 06:00–10:00 UTC). V4 Pro still billed separately. Docs: <a href="https://api-docs.deepseek.com/quick_start/pricing" rel="noopener">api-docs.deepseek.com</a></td><td><button type="button" data-fill="deepseek">Fill deepseek-flash</button></td></tr>
+      <tr><td><a href="https://console.x.ai" rel="noopener">xAI Grok</a></td><td>Signup credits (not unlimited free).</td><td><button type="button" data-fill="xai">Fill Grok</button></td></tr>
+      <tr><td><a href="https://api.together.xyz" rel="noopener">Together</a> · <a href="https://fireworks.ai" rel="noopener">Fireworks</a></td><td>Small trial credits, then paid.</td><td><button type="button" data-fill="together">Together</button> <button type="button" data-fill="fireworks">Fireworks</button></td></tr>
+      <tr><td><a href="https://platform.openai.com/api-keys" rel="noopener">OpenAI</a> · <a href="https://console.anthropic.com" rel="noopener">Anthropic</a></td><td>Paid. Paste key here the same way.</td><td><button type="button" data-fill="openai">OpenAI</button> <button type="button" data-fill="anthropic">Claude</button></td></tr>
+    </tbody>
+  </table>
+  <p>Unknown vendor? Choose <strong>Any OpenAI-compatible URL</strong>, paste their <code>base</code> (we append <code>/v1/chat/completions</code> if needed), key, and model id. Directories: <a href="https://freellm.net" rel="noopener">freellm.net</a> · <a href="https://github.com/open-free-llm-api/awesome-freellm-apis" rel="noopener">awesome-freellm-apis</a>.</p>
+  <h2>Disclaimers</h2>
+  <ul>
+    <li>RESOURCE, not CANON. Dual ledgers / Haven Star Chart remain canon.</li>
+    <li>No account. API keys never go to chatagent.ca servers.</li>
+    <li>Not medical, legal, or financial advice. P0 blocks OS-wipe style prompts. You remain the publisher.</li>
+    <li>This domain does <strong>not</strong> host a public GPU. CORS failures are the vendor blocking browsers — try Groq/OpenRouter or the local kit.</li>
+    <li><strong>License:</strong> LYGO Sovereign License v3.0 — you may use it and build on it; you may <strong>not</strong> sell, rebrand, white-label, publish modified copies, or strip attribution, seals or signatures. Source-available, <strong>not open source</strong>. <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/LICENSING.md">What you may do</a> · <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/LICENSE">LICENSE</a>.</li>
+    <li>Donate is optional: <a href="https://www.paypal.com/paypalme/ExcavationPro">PayPal.me/ExcavationPro</a>.</li>
+  </ul>
+</section>
+<footer class="legal">
+  <p>© <span class="y">2026</span> Justin Helmer · LYGO™ · Dual ledgers / Star Chart remain CANON. This page is RESOURCE. <a href="https://chatagent.ca/privacy.html">Privacy</a> · <a href="https://chatagent.ca/terms.html">Terms</a> · <a href="https://chatagent.ca/security.txt">security.txt</a> · <a href="/guides/how-to-lygo-llm-portal.html">How to</a></p>
+  <p><strong>LYGO PC LOCAL CONSOLE™ · LYGO CLAW™ · Δ9Φ963</strong> — © 2024–2026 Justin Helmer (Lightfather · Excavationpro · DeepSeekOracle). Licensed under the <strong>LYGO Sovereign License v3.0</strong> (<a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/LICENSE">LICENSE</a>): use and build on it — <strong>no resale, rebranding, white-labelling, or distribution of modified copies</strong>; seals, signatures and attribution must remain intact. Not open source. Brand policy: <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/TRADEMARKS.md">TRADEMARKS.md</a> · stewardship and succession: <a href="https://github.com/DeepSeekOracle/lygo-protocol-stack/blob/main/SUCCESSION.md">SUCCESSION.md</a>.</p>
+</footer>
+<noscript>
+  <p>LYGO LLM Portal requires JavaScript. Docs: <a href="https://chatagent.ca/lygo-llm-console.html">lygo-llm-console.html</a>. Free. No account.</p>
+</noscript>
+<div id="donateLayer" class="donate-layer" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+  <div class="donate-card">
+    <p class="kicker">Friendly reminder · every 15 minutes</p>
+    <h2 id="donateTitle">Keep the lattice lit</h2>
+    <p>This portal is free. You do not have to donate. Opening PayPal or Patreon unlocks Continue — even if you give $0.</p>
+    <div class="donate-actions">
+      <a class="btn-gold" id="donatePaypal" href="https://www.paypal.com/paypalme/ExcavationPro">Open PayPal.me/ExcavationPro</a>
+      <a class="btn-gold" id="donatePatreon" href="https://www.patreon.com/Excavationpro">Open Patreon</a>
+    </div>
+    <button type="button" id="donateClose" disabled>Open a donate page to continue</button>
+  </div>
+</div>
+<script src="tools.js?v=20260916x"></script>
+<script src="app.js?v=20260916x"></script>
+<script src="radio.js"></script>
+<script src="donate.js"></script>
+</body>
+</html>

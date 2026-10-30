@@ -1,0 +1,65 @@
+{
+  "id": "lygo.musicwatch",
+  "family": "watch",
+  "title": "Song watch",
+  "summary": "A finder over the music limb: the engine, every declared weight file, the folder songs land in, and whether the limb the card advertises is one the on-box brain can really call.",
+  "version": "1.0.0",
+  "introduced": "1.4.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-20: a browser tab has no local tree, no engine install and no weights to audit, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.4.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "music_tools",
+    "tools",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/musicwatch",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.musicwatch",
+      "slot": "dock",
+      "title": "Song watch",
+      "data": "GET /api/musicwatch",
+      "refresh_s": 30,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_music.py"
+  ],
+  "docs": "04_MODULES/lygo.musicwatch/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Finder (family 'watch') over the same territory as lygo.musicinfo - that card reports the facts, this one reports the FAULTS. THE CHECK THAT MATTERS MOST is the one no human can see: a limb that is implemented, registered and dispatchable but missing from tools.CORE_NAMES is invisible to the on-box brain, which will answer 'I have no music tool' while the console's own source says otherwise. This card asks tools.core_schema() the question the operator's local model is asked, so that failure is a found fault and not a silent one. IT ASKS, IT DOES NOT RE-DERIVE: the engine resolution, the declared weights and the missing-file names come from music_tools, the card only judges them. GREEN MEANS EVERY CHECK RAN AND FOUND NOTHING: a check that could not run is named in checks.unchecked and drags the card to amber, never green. A weight file that is declared and absent is a FINDING with its name and its expected location - downloading it is the operator's move, and the remedy is printed with the finding. It fixes nothing: its own test scans this source for write calls."
+}

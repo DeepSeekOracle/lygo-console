@@ -1,0 +1,79 @@
+LYGO Local Agent Console 1.3.2 — PC LOCAL FULL — everything is inside this one install
+=====================================================================================
+
+Nothing to download. The console, the chat engine, the picture engine, the brains, and the image
+checkpoint are all in the files you just ran.
+
+WHAT CAME OUT OF THE INSTALLER
+------------------------------
+  engine\                     the chat engine (llama.cpp + its backends)
+  tools\sd-cpu\               the PICTURE engine: stable-diffusion.cpp, CPU build, 45 MB,
+                              no CUDA, no card, no admin rights
+  models\gemma4-12b.gguf      the brain (text + images + audio)
+  models\gemma4-12b-mmproj    its vision/audio projector
+  models\qwen2.5-coder-7b     the fast tasker / coder
+  models\nomic-embed-text     embeddings for memory search
+  models\sd\v1-5-pruned-emaonly.safetensors    the IMAGE checkpoint - SD 1.5, 4.27 GB
+  models\sd\LICENSE-CREATIVEML-OPEN-RAIL-M.txt its licence, travelling with it as it must
+
+BECAUSE IT IS ALL THERE, PICTURES WORK IMMEDIATELY
+--------------------------------------------------
+Boot it (LYGO_LLM_CONSOLE.bat), then ask in plain words:
+
+    draw me a lime green sports car in a futuristic neon city
+
+or open the Image generation module on the web portal:
+
+    https://chatagent.ca/portal/?console=http://127.0.0.1:9642
+
+The console finds the engine and the checkpoint by itself: the packaged engine makes the kit its own
+media root, and the checkpoint sits exactly where it looks (models\sd). No config, no env var, no
+internet.
+
+MEASURED ON THE STUDIO BOX (8 GB card, chat model holding it)
+-------------------------------------------------------------
+  SD 1.5, 512x512    ~174 s      MEASURED, 173.9 s: the checkpoint in this install, 20 steps, cfg 7,
+                                 CPU route (the card is held by the chat model)
+  SD 1.5, 1024x1024  minutes     not measured end to end - 1024x1024 is 4x the pixels of the line
+                                 above, so expect roughly 4x the time on the same route
+  SDXL Turbo 512     ~55 s       MEASURED, 4 steps: the optional checkpoint below
+  SDXL Turbo 1024    272-300 s   MEASURED, CPU route, chat model resident
+  SDXL Turbo 1024    ~12.5 s     MEASURED, CUDA build with the card free (not in this installer)
+
+FASTER, OPTIONAL — AND WHY IT IS NOT THE DEFAULT HERE
+----------------------------------------------------
+SDXL Turbo is 4 steps instead of 20, so it is much faster. It is NOT inside this installer because its
+licence does not let us redistribute it: Stability AI released SDXL Turbo under a non-commercial
+research licence. SD 1.5's licence (CreativeML Open RAIL-M) does allow redistribution with the
+licence attached, which is exactly why SD 1.5 is the one that ships. Want Turbo for yourself?
+
+    tools\sd-cpu\FETCH_IMAGE_MODEL.bat          (or the Start-menu entry)
+
+It fetches 6.94 GB once from Stability's own repository, shows you that licence, resumes if the line
+drops, checks the byte count, and deletes a file that fails the check rather than keeping a bad one.
+Put it in the same models\sd folder and the console will use it as the default.
+
+WHERE YOUR PICTURES GO
+----------------------
+    <install>\workspace\images\gen-<stamp>.png
+
+with a receipt naming the route (cpu / cuda), the engine, the checkpoint, the steps, the seconds and
+the bytes - a claim of "drawn" is something the engine measured, not something the model remembers
+meaning to do.
+
+VERIFY WHAT YOU DOWNLOADED
+--------------------------
+Every installer for this build carries its SHA-256 on the SkillHub catalog
+(https://chatagent.ca/lygoskillhub.html) and on our HuggingFace vault
+(https://huggingface.co/DeepSeekOracle/lygo-console-builds):
+
+    CertUtil -hashfile LYGO_LLM_CONSOLE_1.3.2_PC_SETUP_FULL.exe SHA256
+
+NOTE: 17 GB of weights cannot ride inside one EXE - Windows cannot load a Setup.exe larger than about
+4.2 GB - so this installer ships as SETUP.EXE plus .bin slices beside it. Keep the files together when
+you move them; the installer reads the slices itself.
+
+Licences: the kit is LYGO Sovereign Licence v3.0 (no resale, no rebranding, no modified
+redistribution). llama.cpp and stable-diffusion.cpp are MIT. Weights: Apache-2.0 (Gemma 4 12B by Google
+DeepMind, Qwen2.5-Coder by Alibaba, Nomic Embed by Nomic AI) and CreativeML Open RAIL-M (SD 1.5 by
+Robin Rombach, Patrick Esser and contributors) - both texts are in models\.

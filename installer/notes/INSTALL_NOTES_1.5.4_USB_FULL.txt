@@ -1,0 +1,51 @@
+LYGO Local Agent Console - USB CLAW - FULL build 1.5.4 (2026-09-25)
+
+WHAT 1.5.4 ADDS
+  * The USB copy is carried up to the live tree again - byte-identical across the kit - and
+    the picture engine's own fetch script and notes travel with it.
+  * Both FULL installers are rebuilt from this release's sealed payload, so what you install
+    is exactly what was tested: this is the build the release number names.
+
+WHAT YOU JUST INSTALLED
+  The stick build with its weights inside: the console, its own chat engine, its own Python,
+  its own picture engine, plus the qwen2.5-coder, the embedding model, and the SD 1.5 image
+  checkpoint with its licence. Plug the stick into a machine and it works - no Python install,
+  no download before the first picture or the first answer.
+
+WHAT 1.5.4 ADDS (the new systems)
+  * The lyric sheet speaks the engine's own language - the exact YuE-shaped template is the
+    box's default, and one press restores it.
+  * "Convert" and "Check" answer without spending a render: rewrite your own lyric format,
+    and see what the engine would actually sing.
+  * The agent can write a whole song into the box from a brief, or at random from the engine's
+    own tag vocabulary.
+  * Render fixes: the dropped last section, [VERSE 1] folding to [verse] instead of [verse1],
+    and header lines being sung instead of read.
+
+HOW TO RUN
+  Insert the stick and run LYGO_AGENT_STICK.bat (or LYGO_LLM_CONSOLE.bat) from the install
+  folder; on the studio PC, LYGO_MASTER_MANAGER.bat at the stick root starts the whole lattice.
+
+WHAT IS NOT INSIDE, AND WHY
+  gemma4-12b (7.3 GB) is not in this installer - with it, the package stops fitting on the
+  media it exists for. The Start menu has "Fetch gemma4-12b": one run pulls it from our own
+  vault, sha256 verified, and the console picks it up on the next boot.
+  SDXL Turbo is not inside either (Stability's non-commercial research licence). SD 1.5 is,
+  with its CreativeML Open RAIL-M licence text beside it, and that is the checkpoint whose
+  licence allows redistribution.
+
+THE FILES BESIDE THIS EXE
+  Keep SETUP.EXE and its .bin slices together - Windows cannot load a single Setup.exe larger
+  than ~4.2 GB, so the payload rides in slices and the installer reads them itself.
+  This variant writes ~10 GB to the target, so install it to a stick (or a folder) with that
+  much free. On a small stick use LYGO_LLM_CONSOLE_1.5.4_USB_SETUP instead (573 MB): same
+  console, same picture engine, but the brains are fetched on first run rather than carried.
+
+TWO THINGS THE BUILD DELIBERATELY DOES NOT CARRY
+  Keys   - config/api.json is never part of a build. Open the console, Settings, and paste
+           your own provider keys.
+  Voices - the operator's own sessions, memory, songs and pictures stay on the machine that
+           made them; they are excluded from the payload by construction.
+
+If anything here surprises you, stop and read BUILD_NOTES.md in the install folder - every
+release, every defect, and every decision that shaped it is written down there.

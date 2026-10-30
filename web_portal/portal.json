@@ -1,0 +1,11 @@
+{
+  "hosted_base": "",
+  "hosted_model": "qwen2.5:3b",
+  "hf_router": "https://router.huggingface.co/v1/chat/completions",
+  "hf_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "local_console": "http://localhost:9641",
+  "page": "https://chatagent.ca/portal/",
+  "docs": "https://chatagent.ca/lygo-llm-console.html",
+  "skillhub": "https://chatagent.ca/lygoskillhub.html",
+  "donate": "https://www.paypal.com/paypalme/ExcavationPro"
+}

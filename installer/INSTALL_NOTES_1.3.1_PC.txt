@@ -1,0 +1,41 @@
+LYGO LOCAL AGENT CONSOLE 1.3.1 - PC LOCAL
+=========================================
+
+WHAT JUST HAPPENED
+  The sealed 1.3.1 build was laid down (default C:\LYGO\LLM_CONSOLE), with the full llama.cpp
+  engine and its backends. The installer does not bundle Python: the console boots through
+  LYGO_LLM_CONSOLE.bat, which runs `python`.
+
+START IT
+  Desktop icon "LYGO Local Agent Console", or the Start Menu shortcut, or
+  C:\LYGO\LLM_CONSOLE\LYGO_LLM_CONSOLE.bat
+  Console + portal: http://127.0.0.1:9641   Engine: 127.0.0.1:11441
+  Give it 20-60 seconds on first boot (the engine loads a brain into VRAM first).
+  Stop it with LYGO_LLM_CONSOLE_STOP.bat - or, if that ever refuses, kill the process holding 9641.
+
+THE BRAINS (not in this installer - fetch them, sha256 verified)
+  C:\LYGO\LLM_CONSOLE\models\fetch_models.py --profile full --yes
+    gemma4-12b            text + images + audio   (7.4 GB)
+    gemma4-12b-mmproj     the vision projector   (175 MB)
+    nomic-embed-text      recall / embeddings    (274 MB)
+    qwen2.5-coder-7b      the code brain         (4.7 GB)   ~12.5 GB total
+  Smaller: --profile coder (4.7 GB) · --profile basic (7.3 GB) · --profile embed (274 MB)
+
+  WHERE THEY COME FROM - our own vault, pinned to one commit, nothing else:
+    https://huggingface.co/DeepSeekOracle/lygo-console-models
+    https://github.com/DeepSeekOracle/lygo-console-models        (mirror)
+  fetch_models.py refuses any URL that is not one of those two, and verifies sha256 before a file
+  is kept. models\models.lock.json records the revision, sizes and hashes.
+  The console scans <install>\models ("scan_roots" in config\console.json), so a fetched model is
+  picked up on the next boot - no environment variable, no configuration.
+
+WHAT 1.3.1 CHANGES (measured on this box, same ask)
+  A two-word ask used to generate 106 tokens to show 6 (94% of the turn was text nobody saw).
+  Now it generates 2 and shows 2. Every turn records tokens generated vs tokens shown, why the
+  difference happened, prefill new vs cached, cache hit %, and the limb calls - in /api/health
+  (last_perf), in the console log, and in the portal. `LYGO_TURNPERF=0` puts every turn back
+  exactly as it was, without editing code.
+
+LICENCE
+  LYGO Sovereign License v3.0: use it, run it, build on it. No resale, no rebranding, no modified
+  redistribution. Model weights keep their own licences (Apache-2.0) - see models\.

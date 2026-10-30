@@ -1,0 +1,64 @@
+{
+  "id": "lygo.filminfo",
+  "family": "info",
+  "title": "FilmCraft",
+  "summary": "The video editing card: is the editor and its headless engine on this kit, what is answering now, and what the agent's film limb can reach.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(the editor and the CLI are ~142 MB of fetched payload; a stick without them reports exactly that and names the fetcher, rather than reading empty)",
+    "web": "N/A(by the same steward decision as the other making cards - a browser tab has no local process to start and no folder to report on, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.7.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "film_tools",
+    "paths"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/filminfo",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.film",
+      "slot": "dock",
+      "title": "FilmCraft",
+      "data": "GET /api/filminfo",
+      "refresh_s": 30,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_film.py"
+  ],
+  "docs": "04_MODULES/lygo.filminfo/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-out (family 'info'), the facts half of the film pair. Every row is asked of its OWNER - film_tools.installed() for what is on disk, version() for the CLI's own version string, running() for the editor's control channel, web_status() for the served browser editor, commands() for the catalogue - and none of it is re-derived here, so this card cannot drift out of step with the limb that drives the same harness. WHAT IT WILL NOT DO: it never claims FilmCraft is installed because a folder exists. It names the editor, the CLI and the WebAssembly payload SEPARATELY, by path and size, because a kit can hold one and not the others and collapsing them is how a missing engine reads as a missing card. A kit with no payload at all stays a TRUE reading ('not installed here; run scripts/fetch_filmcraft.ps1'), never a red fault - but it is amber, not green, because the buttons on the sibling card cannot work until the fetcher runs and the card must not read as fine while that is so. It owns no state, writes nothing and gates nothing: its own test scans this source for write calls."
+}

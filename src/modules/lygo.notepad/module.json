@@ -1,0 +1,37 @@
+{
+  "id": "lygo.notepad",
+  "title": "Notepad",
+  "summary": "Scratch notes the operator and the agent share: written from the pane or by a limb, stored as files.",
+  "version": "1.0.1",
+  "introduced": "1.2.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "FULL",
+    "web": "N/A(web parity is decided in WO-0002)"
+  },
+  "requires": {
+    "console": ">=1.1.1",
+    "python": ["3.11", "3.13"],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": ["paths", "atomicio", "receipts", "p0", "auth"],
+  "machinery": ["notepad", "atomicio"],
+  "routes": [
+    { "method": "GET", "path": "/api/notepad", "handler": "notes", "legacy": true },
+    { "method": "POST", "path": "/api/notepad", "handler": "notes_write", "legacy": true }
+  ],
+  "limbs": [
+    { "name": "notepad_list", "effect": "read" },
+    { "name": "notepad_read", "effect": "read" },
+    { "name": "notepad_write", "effect": "write" }
+  ],
+  "panes": [],
+  "state": { "owns": ["save/notepad"], "writes_via": "atomicio", "gate": "p0" },
+  "health": "health",
+  "tests": ["tests/test_module_host.py", "tests/test_notepad.py"],
+  "docs": "04_MODULES/lygo.notepad/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "M1 shim: both routes keep the exact 1.1.1 bodies (GET lists or reads by ?id=; POST actions delete|new|save over the same notepad functions). The three limbs already exist in the kernel's tool catalog (src/tools.py) — this manifest declares their ownership; it does not re-register them, so no tool changes behaviour and no tool is listed twice. The notepad pane moves into the module in Phase M2; the existing ids (#np-body etc.) stay. Writing is gated (p0) and every write goes through atomicio inside the module's own save/notepad/ tree."
+}

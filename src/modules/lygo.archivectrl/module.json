@@ -1,0 +1,75 @@
+{
+  "id": "lygo.archivectrl",
+  "title": "Archive search",
+  "summary": "The operator's archive search: look a page up in the Wayback Machine, read an archived copy of a dead link, and watch a URL for rot.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(promotion pending - authored and certified on PC first, then carried to the stick per-file and hash-verified, where the stick runs its own suite)",
+    "web": "N/A(by steward decision 2026-09-25 - web parity is decided in WO-0002)"
+  },
+  "requires": {
+    "console": ">=1.9.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "atomicio",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "wayback"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/webarchive",
+      "handler": "data",
+      "legacy": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/webarchive",
+      "handler": "control",
+      "legacy": false
+    }
+  ],
+  "limbs": [
+    {
+      "name": "wayback",
+      "effect": "read"
+    }
+  ],
+  "panes": [
+    {
+      "id": "dock.archive",
+      "slot": "dock",
+      "title": "Archive search",
+      "data": "GET /api/webarchive",
+      "refresh_s": 20,
+      "inner_scroll": true
+    }
+  ],
+  "state": {
+    "owns": [
+      "save/wb-archive"
+    ],
+    "writes_via": "atomicio",
+    "gate": "p0"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_archive.py"
+  ],
+  "docs": "04_MODULES/lygo.archivectrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "The actuator half of the archive pair, and the operator's search surface: `lygo.archiveinfo` says whether the archive answers at all, and this module is where a search is actually run. It owns exactly one thing - `save/wb-archive`, the recent searches and the watch list for link rot (its OWN directory, never `save/archive`, which belongs to the sessions archiver) - written through atomicio behind the p0 gate, because a search term is operator text that lands in a record. It fetches nothing itself: every lookup goes through the `wayback` limb's harness (src/wayback.py), which is declared here as owned and lives in the kernel (the limb is not re-registered, so no tool changes behaviour and none is listed twice). A query record says what really happened: the doors asked, the rows the index returned, the seconds it cost, or the harness's own named failure. The panel reads an archived copy through the same harness, and the archived TEXT is inserted into the page as text - never as markup - because it is somebody else's page."
+}

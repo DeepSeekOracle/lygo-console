@@ -1,0 +1,35 @@
+LYGO LOCAL AGENT CONSOLE 1.3.1 - USB CLAW, CODER INCLUDED
+==========================================================
+
+WHAT JUST HAPPENED
+  The sealed 1.3.1 stick build AND its code brain were laid down:
+    models\qwen2.5-coder-7b.gguf   4.7 GB   the brain this build boots
+  The stick build is self-contained - own Python (python\), own engine (engine\) - so it runs from
+  wherever it lands, host Python not required.
+
+  This installer spans files: SETUP.EXE plus one or more .bin slices beside it (Windows cannot load
+  a single Setup.exe larger than ~4.2 GB). Keep them together in one folder.
+
+START IT
+  Start Menu → "LYGO Agent Stick", or <install>\LYGO_AGENT_STICK.bat
+  Console + portal: http://127.0.0.1:9651   Engine: 127.0.0.1:11451
+  Stop with LYGO_AGENT_STICK_STOP.bat.
+
+WHAT IS NOT INSIDE, AND HOW TO GET IT
+  gemma4-12b (7.4 GB - the model that reads pictures and audio). Two ways:
+    1. <install>\models\fetch_models.py --profile basic --yes --dest <install>\models
+       (gemma4-12b + its projector + embeddings, 7.3 GB, from our own vault, sha256 verified)
+    2. or run LYGO_LLM_CONSOLE_1.3.1_PC_SETUP_FULL on the machine instead - that one carries all four.
+  Our vault, pinned to one commit, and the only two hosts the fetcher will talk to:
+    https://huggingface.co/DeepSeekOracle/lygo-console-models
+    https://github.com/DeepSeekOracle/lygo-console-models        (mirror)
+
+WHAT 1.3.1 CHANGES (measured on the studio PC, same ask)
+  Generated 106 tokens to show 6 - 94% of the turn was text nobody saw. Now: 2 and 2, 2.84 s → 1.03 s.
+  Every turn records generated vs shown, the reason for the gap, prefill new vs cached, cache hit %,
+  limb calls and wall time: /api/health "last_perf", the console log, the portal.
+  `LYGO_TURNPERF=0` restores the previous behaviour exactly.
+
+LICENCE
+  LYGO Sovereign License v3.0: use it, run it, build on it. No resale, no rebranding, no modified
+  redistribution. Model weights: Apache-2.0 (Alibaba Qwen) - licence text ships in models\.

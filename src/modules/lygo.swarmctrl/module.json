@@ -1,0 +1,49 @@
+{
+  "id": "lygo.swarmctrl",
+  "family": "ctrl",
+  "title": "Swarm",
+  "summary": "Specialist helpers Hermes can dispatch. QwenPaw on 11441 only if already booted. API advisor on 18900. Cron pulse. Never starts llama-server.",
+  "version": "1.0.0",
+  "introduced": "1.9.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(needs the PC engine on 11441)",
+    "web": "N/A(a browser tab cannot reach the local engines)"
+  },
+  "requires": {
+    "console": ">=1.9.0",
+    "python": ["3.11", "3.13"],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": ["paths", "auth"],
+  "machinery": ["swarm", "tasking", "crons"],
+  "routes": [
+    {"method": "GET", "path": "/api/swarm", "handler": "data", "legacy": false},
+    {"method": "POST", "path": "/api/swarm", "handler": "control", "legacy": false}
+  ],
+  "limbs": [
+    {"name": "swarm_status", "effect": "read"},
+    {"name": "swarm_ask", "effect": "read"},
+    {"name": "swarm_advise", "effect": "read"},
+    {"name": "swarm_dispatch", "effect": "write"},
+    {"name": "swarm_pulse", "effect": "write"}
+  ],
+  "panes": [
+    {
+      "id": "dock.swarm",
+      "slot": "dock",
+      "title": "Swarm",
+      "data": "GET /api/swarm",
+      "refresh_s": 20,
+      "inner_scroll": false
+    }
+  ],
+  "state": {"owns": ["save/swarm", "data/swarm"], "writes_via": "atomicio", "gate": "none"},
+  "health": "health",
+  "tests": ["tests/test_swarm.py"],
+  "docs": "04_MODULES/lygo.swarmctrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Hermes manages workers via lygo_limb swarm_*. Local helper never boots llama-server. API advisor is optional. Dispatch uses the existing task queue."
+}

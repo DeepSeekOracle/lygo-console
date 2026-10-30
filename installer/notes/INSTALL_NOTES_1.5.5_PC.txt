@@ -1,0 +1,39 @@
+LYGO Local Agent Console - PC LOCAL LOCAL - build 1.5.5 (2026-09-25)
+WHAT 1.5.5 ADDS
+  * A fresh install no longer prints a RAG error on its first boot.
+  * The installer no longer ships workspace\notes (bench scratch, not part of the kit).
+
+WHAT 1.5.5 ADDS
+  * The USB copy is carried up to the live tree again - byte-identical across the kit - and
+    the picture engine's own fetch script and notes travel with it.
+  * Both FULL installers are rebuilt from this release's sealed payload, so what you install
+    is exactly what was tested: this is the build the release number names.
+
+WHAT YOU JUST INSTALLED
+  The whole console, sealed: chat, the picture engine, and the music systems. It installs to
+  C:\LYGO\LLM_CONSOLE and it runs on its own - no cloud, no account.
+
+WHAT 1.5.5 ADDS (the new systems)
+  * The lyric sheet speaks the engine's own language. The box opens with the exact template
+    YuE reads (one section per single-word [tag]); one press puts it back if you clear it.
+  * "Convert" rewrites your own lyric format into that one, and "Check" tells you what YuE
+    would actually sing - both answer without spending a render.
+  * The agent can write a whole song into the box: give it a brief, or let it pick from the
+    engine's own tag vocabulary.
+  * Render fixes: the last section of a song used to be dropped, [VERSE 1] used to fold into
+    [verse1] instead of [verse], and header lines could be sung instead of read. All three
+    are fixed and covered by tests.
+
+HOW TO RUN
+  PC  : C:\LYGO\LLM_CONSOLE\LYGO_LLM_CONSOLE.bat  (or the desktop shortcut)
+  USB : plug the stick in and run LYGO_MASTER_MANAGER.bat from the stick root.
+
+THREE THINGS THE BUILD DELIBERATELY DOES NOT CARRY
+  Keys   - config/api.json is never part of a build. Open the console, Settings, and paste
+           your own provider keys.
+  Models - this installer fetches them: run  models\fetch_models.py  inside the installed
+           folder and it pulls exactly the files models.lock.json lists.
+  Voices - the operator's own sessions and memory stay on the machine that made them.
+
+If anything here surprises you, stop and read BUILD_NOTES.md in the install folder - every
+release, every defect, and every decision that shaped it is written down there.

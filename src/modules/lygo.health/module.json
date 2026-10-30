@@ -1,0 +1,30 @@
+{
+  "id": "lygo.health",
+  "title": "Health",
+  "summary": "Says whether the console and each module are answering right now, and which edition this kit is.",
+  "version": "1.0.0",
+  "introduced": "1.2.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "FULL",
+    "web": "N/A(web parity is decided in WO-0002)"
+  },
+  "requires": {
+    "console": ">=1.1.1",
+    "python": ["3.11", "3.13"],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": ["paths", "atomicio", "receipts", "p0", "auth"],
+  "machinery": ["version", "paths"],
+  "routes": [],
+  "limbs": [],
+  "panes": [],
+  "state": { "owns": [], "writes_via": "atomicio", "gate": "none" },
+  "health": "health",
+  "tests": ["tests/test_module_host.py"],
+  "docs": "04_MODULES/lygo.health/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "M1: no route yet, and that is deliberate. /api/health is a kernel route whose payload needs the live brain/engine/registry state (STATE, TOKEN, reg_load); re-implementing it inside an adapter would duplicate kernel logic, which this work order forbids. The route transfers once the kernel exposes a health_payload() function (Phase M3, in its own work order). Until then this module owns the *status answer* /api/modules reports and the kernel keeps serving /api/health byte-for-byte. Read-only: owns no state."
+}

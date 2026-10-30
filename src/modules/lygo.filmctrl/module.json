@@ -1,0 +1,77 @@
+{
+  "id": "lygo.filmctrl",
+  "title": "FilmCraft controls",
+  "summary": "The buttons: boot the editor with its control channel open, serve the offline browser editor, stop either - plus the route and the record behind every one of them.",
+  "version": "1.0.0",
+  "introduced": "1.7.0",
+  "lifecycle": "WIRED",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "DEGRADED(the buttons refuse by name on a stick that carries no payload, and the fetcher is named; nothing is downloaded by a click)",
+    "web": "N/A(same steward decision as the other actuator cards: a browser tab cannot start a process on this machine)"
+  },
+  "requires": {
+    "console": ">=1.7.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "atomicio",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "film_tools"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/film",
+      "handler": "data",
+      "legacy": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/film",
+      "handler": "control",
+      "legacy": false
+    }
+  ],
+  "limbs": [
+    {
+      "name": "film",
+      "effect": "write"
+    }
+  ],
+  "panes": [
+    {
+      "id": "dock.filmctl",
+      "slot": "dock",
+      "title": "FilmCraft controls",
+      "data": "GET /api/film",
+      "refresh_s": 15,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [
+      "save/film"
+    ],
+    "writes_via": "atomicio",
+    "gate": "p0"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_film.py",
+    "tests/test_limb_film.py"
+  ],
+  "docs": "04_MODULES/lygo.filmctrl/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "The actuator half of the film pair: `lygo.filminfo` reads the facts, and this module is where FilmCraft is actually started, served and stopped. It owns exactly one thing - `save/film`, this harness's own small state (the pid and port of what the console started, the cached command catalogue, the last run script) - written through atomicio behind the p0 gate. It renders nothing itself: every call goes through the `film` limb's own harness, declared here as owned (the limb lives in limbs.py and is not re-registered, so no tool changes behaviour and none is listed twice). WHAT IT WILL NOT DO: it will not stop an editor or a helper it did not start (a window the operator launched belongs to the operator, and `stop` refuses that case by name); it will not claim a process came up because it spawned one (the control port answering is the proof, and a boot that dies reports its log tail); it will not start a download - a stick with no payload refuses and names scripts/fetch_filmcraft.ps1; and it will not export over the operator's own project without consent (a project outside workspace/film is refused unless the caller passes consent)."
+}

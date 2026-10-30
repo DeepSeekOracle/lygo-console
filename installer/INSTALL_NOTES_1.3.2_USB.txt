@@ -1,0 +1,70 @@
+LYGO Local Agent Console 1.3.2 — USB CLAW (stick build) — what you just installed
+===============================================================================
+
+This is the stick console: its own chat engine, its own Python, its own model store, and — new in
+1.3.2 — its own PICTURE ENGINE inside the kit:
+
+    tools\sd-cpu\   stable-diffusion.cpp, CPU build · 45 MB · 20 files
+                    no CUDA, no card, no admin rights, nothing on PATH
+
+Because the engine travels inside the kit and the console looks for its generators at
+<kit>\tools\sd-cpu when the machine it is plugged into has no media root of its own, the stick finds
+its own picture engine on ANY Windows box. Nothing to configure.
+
+THE STEPS
+---------
+1. Fetch the brains (the stick has no room for them inside the installer):
+
+       python models\fetch_models.py --profile basic      # gemma4-12b + projector, 7.3 GB
+       python models\fetch_models.py --profile full       # + coder + embeddings, 12.5 GB
+
+   From our own vault, SHA-256 checked against models.lock.json. The fetcher refuses any URL that is
+   not ours. On the studio PC the vault is already found at <MODELS> - no download at all.
+
+2. Fetch ONE picture checkpoint (the only picture file that is not in the kit):
+
+       tools\sd-cpu\FETCH_IMAGE_MODEL.bat            # SDXL Turbo, 6.94 GB, 4 steps, fast
+       powershell -ExecutionPolicy Bypass -File tools\sd-cpu\get_model.ps1 -Model sd15
+                                                    # SD 1.5, 4.27 GB, 20 steps, lighter
+
+   It resumes if the line drops, checks the byte count, deletes a file that fails the check rather
+   than keeping a bad one, and prints which licence applies. Weighted against the stick's free space:
+   SDXL Turbo is the fast one, SD 1.5 is the light one. Or take
+   LYGO_LLM_CONSOLE_1.3.2_USB_SETUP_FULL, which carries SD 1.5 (and the coder) inside so there is
+   nothing to fetch at all.
+
+3. Boot it: LYGO_AGENT_STICK.bat (stick ports 9651 / 11451), or LYGO_LLM_CONSOLE.bat if you want it
+   on the PC pair of ports (9641 / 11441).
+
+4. Draw: ask in plain words — "draw me a lime green sports car in a futuristic neon city" — or use the
+   portal's Image generation module, pointed at this console:
+
+       https://chatagent.ca/portal/?console=http://127.0.0.1:9642
+
+MEASURED (studio box, 8 GB card, chat model resident)
+-----------------------------------------------------
+    512x512    about 55 s
+    1024x1024  about 5 minutes     CPU route — the one this kit carries
+    1024x1024  about 12.5 s        CUDA build with the card free (not in this kit)
+
+Pictures land in <install>\workspace\images\gen-<stamp>.png, with a receipt naming the route, the
+engine, the checkpoint, the steps, the seconds and the bytes.
+
+WHAT IS NOT IN THIS INSTALLER, AND WHY
+--------------------------------------
+* The brains (7-12 GB): a stick has no room. models\fetch_models.py pulls them, sha256 verified.
+* The picture checkpoint: 4-7 GB, and the licence is its author's. SDXL Turbo is Stability AI's
+  non-commercial research licence (the batch script fetches it for you and shows you that licence);
+  SD 1.5 is CreativeML Open RAIL-M, which is the one that may be redistributed with its licence - and
+  therefore the one carried inside LYGO_LLM_CONSOLE_1.3.2_USB_SETUP_FULL.
+
+VERIFY WHAT YOU DOWNLOADED
+--------------------------
+    CertUtil -hashfile LYGO_LLM_CONSOLE_1.3.2_USB_SETUP.exe SHA256
+
+Hashes for every installer of this build: https://chatagent.ca/lygoskillhub.html and
+https://huggingface.co/DeepSeekOracle/lygo-console-builds
+
+Licences: the kit is LYGO Sovereign Licence v3.0. llama.cpp and stable-diffusion.cpp are MIT. Weights
+stay their authors' (Gemma 4 12B: Apache-2.0 · Qwen2.5-Coder: Apache-2.0 · SD 1.5: CreativeML Open
+RAIL-M · SDXL Turbo: Stability non-commercial research).

@@ -1,0 +1,693 @@
+==============================================================================
+LATTICE CITY - ENGINEERING INDEX
+==============================================================================
+generated from: <PROJECTS>\lattice-city\site
+regenerate:     python tools/map_game.py
+
+1. WHERE THIS GAME LIVES
+------------------------------------------------------------------------------
+LIVE  https://excavationpro.ca/games/lattice-city/
+      repo      DeepSeekOracle/excavationpro-ca
+      path      games/lattice-city/
+      checkout  D:\excavationpro-ca
+      engine    city.js (classic script)
+OLD   https://chatagent.ca/games/lattice-city/
+      repo      DeepSeekOracle/chatagent
+      path      games/lattice-city/
+      checkout  <USER>\source\chatagent
+      engine    assets/index-BqpfSHLf.js (Vite bundle)
+      test build <DESKTOP>\LATTICE-CITY-BUILD  ->  http://127.0.0.1:8791/   (serve over HTTP, never file://)
+
+2. PAGE WIRING (index.html)
+------------------------------------------------------------------------------
+      ./city.css?v=20261025-sim7
+      ./radio.js
+      ./city.js?v=20261030-localtrain1
+
+3. FILES
+------------------------------------------------------------------------------
+      city.js                                248 KB
+      city.css                                16 KB
+      index.html                               9 KB
+      radio.js                                 7 KB
+      radio.json                              18 KB
+      assets/tiles/manifest.json              21 KB
+      tools/make_rail_tiles.py                12 KB
+      assets/tiles/*.png                    375 files
+      assets/tiles/gen/*.png                 21 files
+
+4. CONSTANTS THAT MATTER
+------------------------------------------------------------------------------
+      RS               160
+      TW               128, TH = 64, HALF_W = TW / 2, HALF_H = TH / 2
+      GROUND_OFFSET    63
+      ASSET_VER        "20261026-windmill1"
+      ANIM_SPRITES     { b04_windmill: 420, b05_watermill: 420 }
+      FARE             1.1, TRAIN_CAP = 40, DWELL = 3.5
+      SAVE_KEY         "latticeCity.save.v3"
+
+5. FUNCTIONS (line numbers in city.js)
+------------------------------------------------------------------------------
+         18  localHour()
+         23  el(id)
+         28  hash2(x, y)
+         33  noiseSeed(seed)
+         34  valueNoise(w, h, scale, seed)
+        165  placeLandmarks(r)
+        270  themeSprite(theme, zone, level)
+        277  themeVariant(theme, zone, level, gx, gy)
+        284  pickTheme(terrain, rx, ry)
+        401  createVehicle(type, x, y, homeX, homeY, depotId)
+        430  getFleet(type)
+        445  requestPath(startX, startY, goalX, goalY, vehicleType)
+        454  findRailPath(startX, startY, goalX, goalY)
+        502  findWaterPath(startX, startY, goalX, goalY)
+        549  updateAllVehicles(dt)
+        565  moveAlongRoute(v, dt)
+        601  returnToDepot(v, dt)
+        619  onVehicleArrived(v)
+        634  dispatchVehicle(type, startX, startY, goalX, goalY, target, depotId)
+        680  silenceTTS()
+        688  initTTS()
+        703  startTTSBroadcast()
+        714  queueBroadcast(text, priority = "normal")
+        719  broadcastNews(items)
+        749  speak(text, priority = "normal")
+        766  processTTSQueue()
+        772  logEvent(type, message, location = null, priority = "normal", speakText = null)
+        783  findRoadPath(startGx, startGy, goalGx, goalGy)
+        829  getFireStations()
+        846  stationId(station)
+        848  countIdleTrucks(station)
+        852  dispatchToFire(fire)
+        892  startFire(region, tileIdx)
+        904  updateFires(dt)
+        943  updateEmergencyVehicles(dt)
+        968  initializeFireTrucks()
+        978  initializeAmbulances()
+        988  initializePoliceCars()
+       1019  getClinics()
+       1031  clinicId(clinic)
+       1033  countIdleAmbulances(clinic)
+       1037  spawnMedicalEmergency()
+       1069  dispatchAmbulance(call)
+       1102  updateMedicalCalls(dt)
+       1146  getPoliceStations()
+       1158  computeCrimeRate()
+       1183  spawnPoliceCall()
+       1226  dispatchPolice(call)
+       1261  updatePoliceCalls(dt)
+       1285  updateEventLogUI()
+       1291  assessFireRisk(region)
+       1347  checkFireIgnition()
+       1391  saveOpts()
+       1398  applyOpts()
+       1476  createHousehold(region, tileIdx, level)
+       1493  generateCitizen(household, archetypeHint = null)
+       1572  weightedRandom(items)
+       1582  rndInt(min, max)
+       1586  initializeHouseholds()
+       1606  populateHouseholds()
+       1622  findWorkplaces()
+       1672  assignJobs()
+       1727  evaluateNeeds()
+       1833  activeCrimesNear(gx, gy, radius)
+       1852  updateHappiness()
+       1899  processDepartures()
+       1927  processMigration()
+       1970  processAging()
+       1988  tickPopulation()
+       2008  updateRegionPopulationStats()
+       2040  getCitizenAvatarURL(citizen)
+       2049  getCitizenCardHTML(citizen)
+       2097  inspectCitizen(citizenId)
+       2106  getPopulationDashboard()
+       2166  createWorkplace(region, tileIdx, zone, level)
+       2217  initializeWorkplaces()
+       2236  syncEconomyWorkers()
+       2252  payWages()
+       2267  payPublicPayroll()
+       2281  calculateRevenue()
+       2377  checkBankruptcies()
+       2405  tickEconomy()
+       2425  getEconomicDashboard()
+       2447  getWorkplaceCardHTML(wp)
+       2473  inspectWorkplace(workplaceId)
+       2494  makeRegion(rx, ry)
+       2504  generateRegion(r, seed)
+       2583  buildDecor(r)
+       2599  regionOf(gx, gy)
+       2608  regionAt(rx, ry)
+       2612  claimedList()
+       2613  claimRegion(rx, ry, free)
+       2639  hasRoad(gx, gy)
+       2642  linkMask(gx, gy, has)
+       2655  roadMask(gx, gy)
+       2656  slopeRoadKey(mask)
+       2661  hasRoadNear(gx, gy)
+       2666  hasRail(gx, gy)
+       2671  railMask(gx, gy)
+       2674  recomputeRegion(r)
+       2713  recalcRegion(r)
+       2732  refreshLinks()
+       2792  recalcWorld()
+       2804  updateDemand()
+       2825  tickRegion(r, tries)
+       2868  pumpTicks()
+       2880  tick()
+       2925  announce(train, town)
+       2934  weekLine()
+       2957  startEvent()
+       3002  updateEvent()
+       3011  eventCommerce(region)
+       3018  eventGrowth(region)
+       3023  checkMilestones()
+       3043  roadsNear(gx, gy)
+       3051  builtTiles(zones)
+       3063  greedyRoute(from, to, maxSteps)
+       3084  spawnCitizen()
+       3106  spawnVehicle()
+       3120  dockCentres()
+       3132  railCentres()
+       3146  railRoute(a, b)
+       3173  railStats()
+       3180  stationDemand(d)
+       3194  serviceStop(tr)
+       3212  localRailLine(r)
+       3239  localRailLines()
+       3250  spawnTrain(line)
+       3270  spawnFerry()
+       3281  spawnBoat()
+       3288  refreshSpots()
+       3302  seedClouds()
+       3309  stepClouds(dt)
+       3320  updatePeds()
+       3392  advance(list, dt)
+       3419  toView(gx, gy)
+       3425  fromView(vx, vy)
+       3431  rotateCamera(dir)
+       3438  tileToScreen(gx, gy)
+       3442  screenToView(sx, sy)
+       3447  screenToTile(sx, sy)
+       3453  focusOn(gx, gy, zoom)
+       3469  focusRegion(r)
+       3474  getCanvas()
+       3481  getCtx()
+       3491  resize()
+       3514  texRand(seed)
+       3518  buildTextures()
+       3589  drawDiamond(cx, cy, w, h, fill)
+       3600  visibleRange()
+       3611  render(ts)
+       3619  drawFrame(ts)
+       4311  getMini()
+       4318  getMCtx()
+       4319  mmCell()
+       4320  drawMinimap()
+       4386  toolById(id)
+       4387  canPaint(t, gx, gy)
+       4407  paint(t, gx, gy)
+       4486  paintLine(t, from, to)
+       4496  inspect(gx, gy)
+       4521  showRegion(r)
+       4553  snapshot()
+       4566  refreshHud()
+       4617  toast(text)
+       4624  deny(text)
+       4625  log(text)
+       4631  initAudio()
+       4641  noiseBuffer(ac)
+       4649  sfxGain()
+       4650  tone(ac, when, f0, f1, dur, gain, type)
+       4662  burst(ac, when, dur, cutoff, gain)
+       4676  sfx(kind)
+       4733  startAmbient()
+       4742  updateTimeLayers(ac)
+       4773  scheduleTrafficPass(ac)
+       4797  scheduleChirps(ac)
+       4815  playChirp(ac, srcBuf, gainNode, f0, f1, maxGain)
+       4828  startSyntheticAmbient(ac, master)
+       4889  stopAmbient()
+       4901  renderTools()
+       4918  bindInput()
+       4970  setSpeed()
+       4977  rle(arr)
+       4987  unrle(str, len)
+       5001  save()
+       5041  load()
+       5153  focusCity()
+       5174  modal(title, html)
+       5179  plantHamlet(r)
+       5198  newWorld(seed)
+       5219  optionsModal()
+       5261  zoomAt(sx, sy, factor)
+       5270  zoomBy(f)
+       5273  bindUi()
+       5326  togglePopDashboard()
+       5333  updatePopDashboard()
+       5358  toggleEconDashboard()
+       5366  updateEconDashboard()
+       5390  firstRun()
+       5415  animateSprites(ts)
+       5425  loadSprites()
+       5530  boot()
+       5537  bootInner()
+      ---- 204 functions
+
+6. SPRITE KEYS (manifest -> files -> pixels -> used by)
+------------------------------------------------------------------------------
+      ambulance                          1           64x48                  (not referenced in code)
+      b01_cottage_red                    1           128x128                THEME[oldtown].R[lvl 1], THEME[oldtown].R[lvl 2], THEME[chapel].R[lvl 1], THEME[mill].R[lvl 1], THEME[watch].R[lvl 1], THEME[harbour].R[lvl 1]
+      b02_tudor_inn                      1           128x128                THEME[oldtown].R[lvl 1], THEME[oldtown].R[lvl 2], THEME[chapel].R[lvl 2], THEME[mill].R[lvl 2], THEME[watch].R[lvl 2], THEME[harbour].R[lvl 2]
+      b03_blacksmith_forge               1           128x128                THEME[oldtown].I[lvl 1], THEME[chapel].I[lvl 1], THEME[watch].I[lvl 1]
+      b04_windmill                       2 frame(s)  128x128,128x128        THEME[mill].R[lvl 1], THEME[mill].I[lvl 1]
+      b05_watermill                      2 frame(s)  128x128,128x128        SVC_SPRITE[water], THEME[mill].I[lvl 1], THEME[harbour].I[lvl 1]
+      b06_bakery                         1           128x128                THEME[oldtown].C[lvl 2], THEME[chapel].C[lvl 2], THEME[mill].C[lvl 2], THEME[harbour].C[lvl 2]
+      b07_apothecary                     1           128x128                THEME[harbour].C[lvl 2]
+      b08_watchtower                     1           128x128                SVC_SPRITE[fire], THEME[watch].C[lvl 2]
+      b09_chapel                         1           128x128                THEME[chapel].R[lvl 2]
+      b10_wizard_tower                   1           128x128                SVC_SPRITE[power]
+      b11_carpenter_sawmill              1           128x128                THEME[oldtown].I[lvl 2], THEME[chapel].I[lvl 3], THEME[mill].I[lvl 2], THEME[watch].I[lvl 2], THEME[harbour].I[lvl 3]
+      b12_general_store                  1           128x128                THEME[oldtown].C[lvl 1], THEME[oldtown].C[lvl 2], THEME[chapel].C[lvl 1], THEME[mill].C[lvl 1], THEME[watch].C[lvl 1], THEME[harbour].C[lvl 1]
+      b13_barn_silo                      1           128x128                THEME[oldtown].I[lvl 3], THEME[chapel].I[lvl 2], THEME[mill].I[lvl 3], THEME[harbour].I[lvl 2]
+      b14_town_hall                      1           128x128                THEME[oldtown].C[lvl 3], THEME[watch].C[lvl 3], THEME[harbour].C[lvl 3]
+      b15_library_scholar                1           128x128                SVC_SPRITE[school], THEME[chapel].C[lvl 3]
+      b16_alchemist_workshop             1           128x128                THEME[mill].C[lvl 3]
+      b17_twin_gatehouse                 1           128x128                SVC_SPRITE[rail], THEME[watch].I[lvl 3]
+      b18_greenhouse_orangery            1           128x128                THEME[mill].R[lvl 3]
+      b19_lighthouse_dock                2 frame(s)  128x128,128x128        THEME[harbour].R[lvl 2]
+      b20_noble_manor                    1           128x128                THEME[oldtown].R[lvl 3], THEME[chapel].R[lvl 3], THEME[watch].R[lvl 3], THEME[harbour].R[lvl 3]
+      b21_japanese_pagoda_sw             1           128x128                (not referenced in code)
+      b22_japanese_pagoda_se             1           128x128                (not referenced in code)
+      b23_mediterranean_villa_sw         1           128x128                (not referenced in code)
+      b24_mediterranean_villa_se         1           128x128                (not referenced in code)
+      b25_bayou_boathouse_sw             1           128x128                (not referenced in code)
+      b26_bayou_boathouse_se             1           128x128                (not referenced in code)
+      b27_artisan_forge_sw               1           128x128                (not referenced in code)
+      b27_grain_windmill_sw              1           128x128                (not referenced in code)
+      b28_artisan_forge_se               1           128x128                (not referenced in code)
+      b28_grain_windmill_se              1           128x128                (not referenced in code)
+      b29_botanical_conservatory_sw      1           128x128                (not referenced in code)
+      b29_grain_windmill_ne              1           128x128                (not referenced in code)
+      b30_botanical_conservatory_se      1           128x128                (not referenced in code)
+      b30_grain_windmill_nw              1           128x128                (not referenced in code)
+      b31_highland_keep_sw               1           128x128                (not referenced in code)
+      b31_river_watermill_sw             1           128x128                (not referenced in code)
+      b32_highland_keep_se               1           128x128                (not referenced in code)
+      b32_river_watermill_se             1           128x128                (not referenced in code)
+      b33_lumber_sawmill_sw              1           128x128                (not referenced in code)
+      b33_river_watermill_ne             1           128x128                (not referenced in code)
+      b34_lumber_sawmill_se              1           128x128                (not referenced in code)
+      b34_river_watermill_nw             1           128x128                (not referenced in code)
+      b35_apothecary_tower_sw            1           128x128                (not referenced in code)
+      b36_apothecary_tower_se            1           128x128                (not referenced in code)
+      b37_shipyard_drydock_sw            1           128x128                (not referenced in code)
+      b38_shipyard_drydock_se            1           128x128                (not referenced in code)
+      b39_desert_caravanserai_sw         1           128x128                (not referenced in code)
+      b40_desert_caravanserai_se         1           128x128                (not referenced in code)
+      b41_pottery_kiln_sw                1           128x128                (not referenced in code)
+      b42_pottery_kiln_se                1           128x128                (not referenced in code)
+      b43_nomad_yurt_sw                  1           128x128                (not referenced in code)
+      b44_nomad_yurt_se                  1           128x128                (not referenced in code)
+      b45_clocktower_guildhall_sw        1           128x128                (not referenced in code)
+      b46_clocktower_guildhall_se        1           128x128                (not referenced in code)
+      b47_winery_press_barn_sw           1           128x128                (not referenced in code)
+      b48_winery_press_barn_se           1           128x128                (not referenced in code)
+      b49_amphitheater_stage_sw          1           128x128                (not referenced in code)
+      b50_amphitheater_stage_se          1           128x128                (not referenced in code)
+      b51_waterworks_pump_house_sw       1           128x128                (not referenced in code)
+      b52_waterworks_pump_house_se       1           128x128                (not referenced in code)
+      b53_glassblower_studio_sw          1           128x128                (not referenced in code)
+      b54_glassblower_studio_se          1           128x128                (not referenced in code)
+      b55_desert_kasbah_sw               1           128x128                (not referenced in code)
+      b56_desert_kasbah_se               1           128x128                (not referenced in code)
+      c01_river_bend_ne                  2 frame(s)  128x128,128x128        (not referenced in code)
+      c02_river_bend_nw                  2 frame(s)  128x128,128x128        (not referenced in code)
+      c03_river_bend_se                  2 frame(s)  128x128,128x128        (not referenced in code)
+      c04_river_bend_sw                  2 frame(s)  128x128,128x128        (not referenced in code)
+      c05_river_tjct_nse                 2 frame(s)  128x128,128x128        (not referenced in code)
+      c06_river_tjct_ews                 2 frame(s)  128x128,128x128        (not referenced in code)
+      c07_river_ford_stone               1           128x128                (not referenced in code)
+      c08_river_quay_dock                1           128x128                SVC_SPRITE[dock]
+      c09_timber_footbridge_ns           1           128x128                (not referenced in code)
+      c10_timber_footbridge_ew           1           128x128                (not referenced in code)
+      c11_waterfall_gorge_n              2 frame(s)  128x128,128x128        (not referenced in code)
+      c12_waterfall_gorge_w              2 frame(s)  128x128,128x128        (not referenced in code)
+      c13_switchback_road_n              1           128x128                (not referenced in code)
+      c14_switchback_road_w              1           128x128                (not referenced in code)
+      c15_road_curve_se                  1           128x128                (not referenced in code)
+      c16_road_curve_nw                  1           128x128                (not referenced in code)
+      d01_plaza_fountain                 2 frame(s)  128x128,128x128        SVC_SPRITE[plaza]
+      d02_village_well                   1           128x128                (not referenced in code)
+      d03_market_stalls                  1           128x128                (not referenced in code)
+      d04_oak_tree_park                  1           128x128                SVC_SPRITE[park]
+      d05_pine_grove                     1           128x128                (not referenced in code)
+      d06_cherry_garden                  1           128x128                (not referenced in code)
+      d07_streetlamps_signpost           1           128x128                (not referenced in code)
+      d08_stone_statue_plaza             1           128x128                SVC_SPRITE[monument]
+      d09_merchant_cart_camp             1           128x128                (not referenced in code)
+      d10_flower_orchard_hedge           1           128x128                (not referenced in code)
+      d11_canal_straight                 2 frame(s)  128x128,128x128        (not referenced in code)
+      d12_meadow_wildflowers             1           128x128                (not referenced in code)
+      fire_truck                         1           64x48                  (not referenced in code)
+      l01_harbor_estuary_seagate         1           128x128                LANDMARK
+      l02_coastal_sea_arch_cliff         1           128x128                LANDMARK
+      l03_elevated_stone_viaduct         1           128x128                (not referenced in code)
+      l04_bamboo_torii_sanctuary         1           128x128                LANDMARK
+      l05_desert_pyramid_ruin            1           128x128                LANDMARK
+      l06_savanna_acacia_waterhole       1           128x128                LANDMARK
+      l07_wildlife_dolphins              1           128x128                LANDMARK
+      l08_wildlife_whale                 1           128x128                LANDMARK
+      l09_wildlife_sea_turtles           1           128x128                LANDMARK
+      l10_wildlife_pelagic_pod           1           128x128                LANDMARK
+      l11_volcanic_caldera_island        2 frame(s)  128x128,128x128        LANDMARK
+      l12_geothermal_hotspring_onsen     2 frame(s)  128x128,128x128        LANDMARK
+      l13_wildlife_flamingos             1           128x128                LANDMARK
+      l14_wildlife_pelicans              1           128x128                LANDMARK
+      l15_wildlife_arctic_foxes          1           128x128                LANDMARK
+      l16_cypress_marsh_boardwalk        1           128x128                LANDMARK
+      l17_coastal_tidal_saltworks        1           128x128                LANDMARK
+      l18_heron_alligator_marsh          1           128x128                LANDMARK
+      l19_gondola_lagoon_fleet           1           128x128                LANDMARK
+      l20_coastal_wharf_boathouse        1           128x128                LANDMARK
+      l21_terraced_rice_paddy            1           128x128                LANDMARK
+      l22_crystal_cavern_mine            1           128x128                LANDMARK
+      l23_royal_coach_procession         1           128x128                LANDMARK
+      l24_water_buffalo_peacock          1           128x128                LANDMARK
+      l25_highland_cattle_pasture        1           128x128                LANDMARK
+      l26_husky_dog_sled_trail           1           128x128                LANDMARK
+      l27_ancient_ruined_aqueduct        1           128x128                LANDMARK
+      l28_log_boom_millpond              1           128x128                LANDMARK
+      l29_ox_logging_wagon_bear          1           128x128                LANDMARK
+      l30_town_crier_plaza               1           128x128                LANDMARK
+      l31_pearl_diver_atoll              1           128x128                LANDMARK
+      l32_desert_qanat_garden            1           128x128                LANDMARK
+      l33_chinese_junk_outrigger         1           128x128                LANDMARK
+      l34_ostrich_desert_savanna         1           128x128                LANDMARK
+      l35_arctic_aurora_station          1           128x128                LANDMARK
+      l36_savanna_baobab_waterhole       1           128x128                LANDMARK
+      l37_giraffe_bactrian_camel         1           128x128                LANDMARK
+      l38_potter_donkey_cart             1           128x128                LANDMARK
+      l39_monastery_cloister             1           128x128                LANDMARK
+      l40_underground_river_grotto       1           128x128                LANDMARK
+      l41_wine_barrel_dray_falconer      1           128x128                LANDMARK
+      l42_monk_scribe_procession         1           128x128                LANDMARK
+      l43_glacial_ice_shrine             1           128x128                LANDMARK
+      l44_terraced_tea_plantation        1           128x128                LANDMARK
+      l45_steam_traction_jester_troupe   1           128x128                LANDMARK
+      l46_tea_picker_masked_troupe       1           128x128                LANDMARK
+      l47_nabataean_treasury_canyon      1           128x128                LANDMARK
+      l48_alpine_stupa_prayer_flag       1           128x128                LANDMARK
+      l49_tibetan_yak_tuareg_camel       1           128x128                LANDMARK
+      l50_glass_merchant_carts           1           128x128                LANDMARK
+      m01_sandy_beach_s                  1           128x128                (not referenced in code)
+      m02_sandy_beach_e                  1           128x128                (not referenced in code)
+      m03_sandy_beach_w                  1           128x128                (not referenced in code)
+      m04_stone_harbor_pier              1           128x128                (not referenced in code)
+      m05_lighthouse_island              1           128x128                (not referenced in code)
+      m06_tropical_palm_island           1           128x128                (not referenced in code)
+      m07_sea_stacks_reef                1           128x128                (not referenced in code)
+      m08_desert_dunes                   1           128x128                (not referenced in code)
+      m09_desert_oasis                   1           128x128                (not referenced in code)
+      m10_red_sandstone_mesa             1           128x128                (not referenced in code)
+      m11_desert_adobe_house             1           128x128                (not referenced in code)
+      m12_desert_bazaar_tent             1           128x128                (not referenced in code)
+      m13_glacier_ice_tongue             1           128x128                (not referenced in code)
+      m14_frozen_tarn_lake               1           128x128                (not referenced in code)
+      m15_nordic_timber_hall             1           128x128                (not referenced in code)
+      m16_igloo_ice_camp                 1           128x128                (not referenced in code)
+      m17_desert_var1_star_dunes         1           128x128                (not referenced in code)
+      m18_desert_var2_salt_playa         1           128x128                (not referenced in code)
+      m19_desert_var3_hoodoo_spires      1           128x128                (not referenced in code)
+      m20_desert_var4_superbloom         1           128x128                (not referenced in code)
+      m21_desert_var5_nomad_camp         1           128x128                (not referenced in code)
+      m22_desert_var6_temple_columns     1           128x128                (not referenced in code)
+      m23_beach_var1_driftwood           1           128x128                (not referenced in code)
+      m24_beach_var2_rowboat_nets        1           128x128                (not referenced in code)
+      m25_beach_var3_tidepool            1           128x128                (not referenced in code)
+      m26_beach_var4_parasol_castle      1           128x128                (not referenced in code)
+      m27_beach_var5_dune_boardwalk      1           128x128                (not referenced in code)
+      m28_beach_var6_treasure_chest      1           128x128                (not referenced in code)
+      m29_sea_var1_kelp_forest           1           128x128                (not referenced in code)
+      m30_sea_var2_coral_reef            1           128x128                (not referenced in code)
+      m31_sea_var3_bell_buoy             1           128x128                (not referenced in code)
+      m32_sea_var4_shipwreck_reef        1           128x128                (not referenced in code)
+      m33_sea_var5_flying_fish           1           128x128                (not referenced in code)
+      m34_sea_var6_bioluminescence       1           128x128                (not referenced in code)
+      m35_highland_var1_heather_cairn    1           128x128                (not referenced in code)
+      m36_highland_var2_larch_pool       1           128x128                (not referenced in code)
+      m37_highland_var3_edelweiss_crag   1           128x128                (not referenced in code)
+      m38_highland_var4_crofter_wall     1           128x128                (not referenced in code)
+      m39_highland_var5_celtic_cross     1           128x128                (not referenced in code)
+      m40_highland_var6_geologist_camp   1           128x128                (not referenced in code)
+      m41_wetland_var1_cattail_fen       1           128x128                (not referenced in code)
+      m42_wetland_var2_wisp_bog          1           128x128                (not referenced in code)
+      m43_wetland_var3_cranberry_bog     1           128x128                (not referenced in code)
+      m44_wetland_var4_stepping_stones   1           128x128                (not referenced in code)
+      m45_wetland_var5_mangrove_arch     1           128x128                (not referenced in code)
+      m46_wetland_var6_peat_cutter_dock  1           128x128                (not referenced in code)
+      m47_coast_var1_breakwater_mole     1           128x128                (not referenced in code)
+      m48_coast_var2_tide_mill_sluice    1           128x128                (not referenced in code)
+      m49_coast_var3_white_chalk_cliff   1           128x128                (not referenced in code)
+      m50_coast_var4_basalt_causeway     1           128x128                (not referenced in code)
+      m51_coast_var5_smuggler_cove       1           128x128                (not referenced in code)
+      m52_coast_var6_red_sea_coral_quay  1           128x128                (not referenced in code)
+      m53_sea_var1_bamboo_weir_cormorant 1           128x128                (not referenced in code)
+      m54_sea_var2_sunken_temple_ruins   1           128x128                (not referenced in code)
+      m55_sea_var3_basalt_stack_puffin_rookery 1           128x128                (not referenced in code)
+      m56_sea_var4_floating_lantern_festival 1           128x128                (not referenced in code)
+      m57_sea_var5_sargasso_kelp_manta_ray 1           128x128                (not referenced in code)
+      m58_sea_var6_geothermal_vent_pumice_shoal 1           128x128                (not referenced in code)
+      police_car                         1           64x48                  (not referenced in code)
+      r01_road_straight_ns               1           128x128                ROAD[0], ROAD[1], ROAD[4], ROAD[5]
+      r02_road_straight_ew               1           128x128                ROAD[2], ROAD[8], ROAD[10]
+      r03_road_cross                     1           128x128                ROAD[15]
+      r04_road_tee_nes                   1           128x128                ROAD[7]
+      r05_road_tee_nsw                   1           128x128                ROAD[13]
+      r06_road_tee_ewn                   1           128x128                ROAD[11]
+      r07_road_tee_ews                   1           128x128                ROAD[14]
+      r08_road_corner_ne                 1           128x128                ROAD[3]
+      r09_road_corner_es                 1           128x128                ROAD[6]
+      r10_road_corner_sw                 1           128x128                ROAD[12]
+      r11_road_corner_wn                 1           128x128                ROAD[9]
+      r12_road_bridge_stone              2 frame(s)  128x128,128x128        (not referenced in code)
+      r25_plaza_var1_marble_fountain     1           128x128                (not referenced in code)
+      r26_plaza_var2_armillary_sundial   1           128x128                (not referenced in code)
+      r27_plaza_var3_market_stalls       1           128x128                (not referenced in code)
+      r28_plaza_var4_bandstand_gazebo    1           128x128                (not referenced in code)
+      r29_plaza_var5_sculptor_courtyard  1           128x128                (not referenced in code)
+      r30_plaza_var6_stone_wellhouse     1           128x128                (not referenced in code)
+      r31_road_var1_tollgate_guardhouse  1           128x128                (not referenced in code)
+      r32_road_var2_triumphal_boulevard  1           128x128                (not referenced in code)
+      r33_road_var3_coaching_crossroads  1           128x128                (not referenced in code)
+      r34_road_var4_cherry_bell_shrine   1           128x128                (not referenced in code)
+      r35_road_var5_beacon_bastion_overlook 1           128x128                (not referenced in code)
+      r36_road_var6_canal_willow_quay    1           128x128                (not referenced in code)
+      rail_cross                         1           128x128                RAIL[15]
+      rail_curve_es                      1           128x128                RAIL[6]
+      rail_curve_ne                      1           128x128                RAIL[3]
+      rail_curve_sw                      1           128x128                RAIL[12]
+      rail_curve_wn                      1           128x128                RAIL[9]
+      rail_depot_platform                1           128x128                (not referenced in code)
+      rail_straight_ew                   1           128x128                RAIL[2], RAIL[8], RAIL[10]
+      rail_straight_ns                   1           128x128                RAIL[0], RAIL[1], RAIL[4], RAIL[5]
+      rail_tee_ewn                       1           128x128                RAIL[11]
+      rail_tee_ews                       1           128x128                RAIL[14]
+      rail_tee_nes                       1           128x128                RAIL[7]
+      rail_tee_nsw                       1           128x128                RAIL[13]
+      s01_slope_ramp_n                   1           128x128                (not referenced in code)
+      s02_slope_ramp_w                   1           128x128                (not referenced in code)
+      s03_slope_ramp_e                   1           128x128                (not referenced in code)
+      s04_slope_ramp_s                   1           128x128                (not referenced in code)
+      s05_slope_stairs_n                 1           128x128                (not referenced in code)
+      s06_slope_stairs_w                 1           128x128                (not referenced in code)
+      s07_slope_stream_n                 1           128x128                (not referenced in code)
+      s08_slope_road_n                   1           128x128                (not referenced in code)
+      s09_plateau_level1                 1           128x128                (not referenced in code)
+      s10_meadow_wildflowers_v1          1           128x128                (not referenced in code)
+      s11_meadow_rock_outcrop_v2         1           128x128                (not referenced in code)
+      s12_meadow_stepping_stones_v3      1           128x128                (not referenced in code)
+      s13_canyon_wadi_trail              1           128x128                (not referenced in code)
+      s14_snow_var1_drifts               1           128x128                (not referenced in code)
+      s15_snow_var2_slate_ibex           1           128x128                (not referenced in code)
+      s16_snow_var3_runestone            1           128x128                (not referenced in code)
+      s17_snow_var4_creek_bridge         1           128x128                (not referenced in code)
+      s18_snow_var5_sled_fence           1           128x128                (not referenced in code)
+      s19_snow_var6_ice_crystals         1           128x128                (not referenced in code)
+      s20_sloped_forest_stream           1           128x128                (not referenced in code)
+      s21_forest_var1_hollow_oak         1           128x128                (not referenced in code)
+      s22_forest_var2_silver_birch       1           128x128                (not referenced in code)
+      s23_forest_var3_pine_cedar         1           128x128                (not referenced in code)
+      s24_forest_var4_cherry_willow      1           128x128                (not referenced in code)
+      s25_forest_var5_woodcutter         1           128x128                (not referenced in code)
+      s26_forest_var6_apiary_lavender    1           128x128                (not referenced in code)
+      s27_sloped_grand_balustrade_stairs 1           128x128                (not referenced in code)
+      s28_sloped_alpine_suspension_bridge 1           128x128                (not referenced in code)
+      s29_slope_var1_rockery             1           128x128                (not referenced in code)
+      s30_slope_var2_olive_cypress       1           128x128                (not referenced in code)
+      s31_slope_var3_vineyard_cellar     1           128x128                (not referenced in code)
+      s32_slope_var4_shepherd_pasture    1           128x128                (not referenced in code)
+      s33_slope_var5_snow_moraine        1           128x128                (not referenced in code)
+      s34_slope_var6_badlands_canyon     1           128x128                (not referenced in code)
+      s35_farm_var1_wheat_scarecrow      1           128x128                (not referenced in code)
+      s36_farm_var2_lavender_distill     1           128x128                (not referenced in code)
+      s37_farm_var3_pumpkin_melon        1           128x128                (not referenced in code)
+      s38_farm_var4_apple_cider_press    1           128x128                (not referenced in code)
+      s39_farm_var5_tulip_stripes        1           128x128                (not referenced in code)
+      s40_farm_var6_kitchen_garden       1           128x128                (not referenced in code)
+      unknown                            80 frame(s) 128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,128x128,11x11,11x11,22x10,22x10,33x18,32x18,33x23,33x23 (not referenced in code)
+
+7. MULTI-FRAME KEYS (animation candidates)
+------------------------------------------------------------------------------
+      b04_windmill                       2 frames   ANIMATING
+      b05_watermill                      2 frames   ANIMATING
+      b19_lighthouse_dock                2 frames   static (add to ANIM_SPRITES)
+      c01_river_bend_ne                  2 frames   static (add to ANIM_SPRITES)
+      c02_river_bend_nw                  2 frames   static (add to ANIM_SPRITES)
+      c03_river_bend_se                  2 frames   static (add to ANIM_SPRITES)
+      c04_river_bend_sw                  2 frames   static (add to ANIM_SPRITES)
+      c05_river_tjct_nse                 2 frames   static (add to ANIM_SPRITES)
+      c06_river_tjct_ews                 2 frames   static (add to ANIM_SPRITES)
+      c11_waterfall_gorge_n              2 frames   static (add to ANIM_SPRITES)
+      c12_waterfall_gorge_w              2 frames   static (add to ANIM_SPRITES)
+      d01_plaza_fountain                 2 frames   static (add to ANIM_SPRITES)
+      d11_canal_straight                 2 frames   static (add to ANIM_SPRITES)
+      l11_volcanic_caldera_island        2 frames   static (add to ANIM_SPRITES)
+      l12_geothermal_hotspring_onsen     2 frames   static (add to ANIM_SPRITES)
+      r12_road_bridge_stone              2 frames   static (add to ANIM_SPRITES)
+      unknown                            80 frames   static (add to ANIM_SPRITES)
+
+8. THEMES -> ZONE -> LEVEL -> SPRITE
+------------------------------------------------------------------------------
+      This is how you find a building: the theme rolled by the region decides the sprite.
+      [oldtown] Old town
+          R lvl 1: b01_cottage_red, b02_tudor_inn
+          R lvl 2: b02_tudor_inn, b01_cottage_red
+          R lvl 3: b20_noble_manor
+          C lvl 1: b12_general_store
+          C lvl 2: b06_bakery, b12_general_store
+          C lvl 3: b14_town_hall
+          I lvl 1: b03_blacksmith_forge
+          I lvl 2: b11_carpenter_sawmill
+          I lvl 3: b13_barn_silo
+      [chapel] Chapel town
+          R lvl 1: b01_cottage_red
+          R lvl 2: b02_tudor_inn, b09_chapel
+          R lvl 3: b20_noble_manor
+          C lvl 1: b12_general_store
+          C lvl 2: b06_bakery
+          C lvl 3: b15_library_scholar
+          I lvl 1: b03_blacksmith_forge
+          I lvl 2: b13_barn_silo
+          I lvl 3: b11_carpenter_sawmill
+      [mill] Mill country
+          R lvl 1: b01_cottage_red, b04_windmill
+          R lvl 2: b02_tudor_inn
+          R lvl 3: b18_greenhouse_orangery
+          C lvl 1: b12_general_store
+          C lvl 2: b06_bakery
+          C lvl 3: b16_alchemist_workshop
+          I lvl 1: b04_windmill, b05_watermill
+          I lvl 2: b11_carpenter_sawmill
+          I lvl 3: b13_barn_silo
+      [watch] Watch country
+          R lvl 1: b01_cottage_red
+          R lvl 2: b02_tudor_inn
+          R lvl 3: b20_noble_manor
+          C lvl 1: b12_general_store
+          C lvl 2: b08_watchtower
+          C lvl 3: b14_town_hall
+          I lvl 1: b03_blacksmith_forge
+          I lvl 2: b11_carpenter_sawmill
+          I lvl 3: b17_twin_gatehouse
+      [harbour] Harbour
+          R lvl 1: b01_cottage_red
+          R lvl 2: b02_tudor_inn, b19_lighthouse_dock
+          R lvl 3: b20_noble_manor
+          C lvl 1: b12_general_store
+          C lvl 2: b06_bakery, b07_apothecary
+          C lvl 3: b14_town_hall
+          I lvl 1: b05_watermill
+          I lvl 2: b13_barn_silo
+          I lvl 3: b11_carpenter_sawmill
+
+9. SERVICES (SVC_SPRITE + radius/upkeep lives in SVC_RULE)
+------------------------------------------------------------------------------
+      park       -> d04_oak_tree_park
+      water      -> b05_watermill
+      power      -> b10_wizard_tower
+      plaza      -> d01_plaza_fountain
+      school     -> b15_library_scholar
+      monument   -> d08_stone_statue_plaza
+      dock       -> c08_river_quay_dock
+      rail       -> b17_twin_gatehouse
+      fire       -> b08_watchtower
+
+10. RAIL MAP (neighbour bitmask -> sprite)
+------------------------------------------------------------------------------
+      bits: 1 up-right  2 down-right  4 down-left  8 up-left
+      mask  0 (0000) -> rail_straight_ns
+      mask  1 (0001) -> rail_straight_ns
+      mask  2 (0010) -> rail_straight_ew
+      mask  3 (0011) -> rail_curve_ne
+      mask  4 (0100) -> rail_straight_ns
+      mask  5 (0101) -> rail_straight_ns
+      mask  6 (0110) -> rail_curve_es
+      mask  7 (0111) -> rail_tee_nes
+      mask  8 (1000) -> rail_straight_ew
+      mask  9 (1001) -> rail_curve_wn
+      mask 10 (1010) -> rail_straight_ew
+      mask 11 (1011) -> rail_tee_ewn
+      mask 12 (1100) -> rail_curve_sw
+      mask 13 (1101) -> rail_tee_nsw
+      mask 14 (1110) -> rail_tee_ews
+      mask 15 (1111) -> rail_cross
+
+11. HYGIENE
+------------------------------------------------------------------------------
+      manifest keys          280
+      png on disk            375
+      orphan png (not in manifest) 0
+      missing files (in manifest, not on disk) 0
+
+12. HOW TO FIND AN ASSET (worked example)
+------------------------------------------------------------------------------
+      Q: where is the windmill?
+      A: python tools/map_game.py --grep windmill
+         b04_windmill                   -> b04_windmill__0.png, b04_windmill__1.png
+              used by: THEME[mill].R[lvl 1], THEME[mill].I[lvl 1]
+         b05_watermill                  -> b05_watermill__0.png, b05_watermill__1.png
+              used by: SVC_SPRITE[water], THEME[mill].I[lvl 1], THEME[harbour].I[lvl 1]
+         b27_grain_windmill_sw          -> b27_grain_windmill_sw.png
+              used by: (theme only)
+         b28_grain_windmill_se          -> b28_grain_windmill_se.png
+              used by: (theme only)
+         b29_grain_windmill_ne          -> b29_grain_windmill_ne.png
+              used by: (theme only)
+         b30_grain_windmill_nw          -> b30_grain_windmill_nw.png
+              used by: (theme only)
+         b31_river_watermill_sw         -> b31_river_watermill_sw.png
+              used by: (theme only)
+         b32_river_watermill_se         -> b32_river_watermill_se.png
+              used by: (theme only)
+         b33_river_watermill_ne         -> b33_river_watermill_ne.png
+              used by: (theme only)
+         b34_river_watermill_nw         -> b34_river_watermill_nw.png
+              used by: (theme only)
+      Then section 8: the sprite only appears under those theme entries.
+      Then LC.findSprite('b04_windmill') in the browser to get tile coordinates.
+
+13. BROWSER QA HOOKS (window.LC)
+------------------------------------------------------------------------------
+      LC.animInfo
+      LC.findSprite
+      LC.tileKey
+      LC.railStats
+      LC.railRoute
+      LC.railInfo
+      LC.counts
+      LC.paint
+      LC.tileToScreen
+      LC.screenToTile
+      LC.focusOn
+

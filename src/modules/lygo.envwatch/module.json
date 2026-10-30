@@ -1,0 +1,71 @@
+{
+  "id": "lygo.envwatch",
+  "family": "watch",
+  "title": "Environment watch",
+  "summary": "The pair to LLM data: it finds what needs fixing - skill files that never reach the model, mapped paths that do not resolve, error lines in the background - and stays green only when nothing does.",
+  "version": "1.1.1",
+  "introduced": "1.2.0",
+  "lifecycle": "PARITY",
+  "surfaces": {
+    "pc": "FULL",
+    "usb": "FULL",
+    "web": "N/A(by steward decision 2026-09-20: the web portal does not need these modules - a browser tab has no local engine, no registry file, no receipts and no log files, so a card there could only be decoration)"
+  },
+  "requires": {
+    "console": ">=1.2.0",
+    "python": [
+      "3.11",
+      "3.13"
+    ],
+    "modules": [],
+    "env": []
+  },
+  "kernel_services": [
+    "paths",
+    "receipts",
+    "p0",
+    "auth"
+  ],
+  "machinery": [
+    "skills_mod",
+    "workspace_map",
+    "admin_map",
+    "engine",
+    "lygo_engine",
+    "backends",
+    "perf",
+    "compaction",
+    "cloud_api"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/envwatch",
+      "handler": "data",
+      "legacy": false
+    }
+  ],
+  "limbs": [],
+  "panes": [
+    {
+      "id": "dock.env",
+      "slot": "dock",
+      "title": "Environment watch",
+      "data": "GET /api/envwatch",
+      "refresh_s": 10,
+      "inner_scroll": false
+    }
+  ],
+  "state": {
+    "owns": [],
+    "writes_via": "atomicio",
+    "gate": "none"
+  },
+  "health": "health",
+  "tests": [
+    "tests/test_module_envwatch.py"
+  ],
+  "docs": "04_MODULES/lygo.envwatch/MODULE_SPEC.md",
+  "adapter": "backend.py",
+  "notes": "Read-only finder, the pair to lygo.llminfo: that module answers 'what is hooked up', this one answers 'what needs fixing'. It owns no state, writes nothing, gates nothing and fixes nothing - a watcher that also repaired would hide the thing it found, so its gate is 'none' and the tests scan its own source for write calls. Three rules shape it: a finding is a fact with a LOCATION (a path, a file, a log line), a search that did not run is reported UNCHECKED by name and holds the card out of green, and the search is STATED - the panel prints its narrow log rule table and how many checks ran, so 'nothing needs fixing' is a claim about a named search and never a vibe. Its family suffix is 'watch' (a finder: amber or red when something needs fixing) against lygo.llminfo's 'info' (a read-out), per 01_DESIGN/MODULE_NAMING_AND_BRANDING_v1.md. The pane id is slot-prefixed ('dock.env') because /api/modules publishes pane ids and the shell places a pane by its prefix; slot 'dock' is the bottom strip, full length, one card per module, with the page scrolling to it, and inner_scroll is false on purpose. Promoted to the USB LYGO CLAW in 1.2.0 (as-built Addendum A7): the module and the pane host travelled together, every file sha256-verified against the PC tree, and the stick re-ran the tests."
+}

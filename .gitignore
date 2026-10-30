@@ -1,0 +1,22 @@
+# runtime state and weights - never in git (root-anchored: a vendored `data/` is not ours to drop)
+/data/
+/save/
+/workspace/
+/models/
+/engine/
+/utilities/filmcraft/
+.pytest_cache/
+__pycache__/
+# credentials and machine paths
+config/api.json
+config/api.json.bak-*
+config/local.json
+config/admin.json
+*.key
+*.pem
+.env
+# build leftovers
+*.bak
+*.bak-*
+*.log
+*.tmp
